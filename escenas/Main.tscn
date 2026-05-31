@@ -1,9 +1,19 @@
-[gd_scene load_steps=30 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=32 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="MeshLibrary" path="res://assets/models/biblioteca_terreno.tres" id="2_lib"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="3_esp"]
 [ext_resource type="Script" path="res://escenas/mundo/ConstructorTerreno.gd" id="4_con"]
+[ext_resource type="ArrayMesh" path="res://assets/models/arbol_saman.obj" id="5_saman"]
+[ext_resource type="ArrayMesh" path="res://assets/models/arbol_araguaney.obj" id="6_arag"]
+[ext_resource type="ArrayMesh" path="res://assets/models/arbusto.obj" id="7_arbusto"]
+[ext_resource type="ArrayMesh" path="res://assets/models/mata_grama.obj" id="8_grama"]
+[ext_resource type="ArrayMesh" path="res://assets/models/vaca.obj" id="9_vaca"]
+[ext_resource type="ArrayMesh" path="res://assets/models/toro.obj" id="10_toro"]
+[ext_resource type="ArrayMesh" path="res://assets/models/caballo.obj" id="11_caballo"]
+[ext_resource type="ArrayMesh" path="res://assets/models/cerdo.obj" id="12_cerdo"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gallina.obj" id="13_gallina"]
+[ext_resource type="ArrayMesh" path="res://assets/models/gallo.obj" id="14_gallo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.78, 1)
@@ -23,64 +33,24 @@ tonemap_mode = 2
 tonemap_exposure = 1.0
 fog_enabled = true
 fog_light_color = Color(0.74, 0.8, 0.86, 1)
-fog_density = 0.0018
+fog_density = 0.0016
 fog_aerial_perspective = 0.5
 
-[sub_resource type="StandardMaterial3D" id="Mat_tronco"]
-albedo_color = Color(0.42, 0.31, 0.2, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="Mesh_tronco"]
-material = SubResource("Mat_tronco")
-size = Vector3(1.4, 5, 1.4)
-
-[sub_resource type="StandardMaterial3D" id="Mat_copa_saman"]
-albedo_color = Color(0.31, 0.48, 0.22, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="Mesh_copa_saman"]
-material = SubResource("Mat_copa_saman")
-size = Vector3(7, 4, 7)
-
-[sub_resource type="StandardMaterial3D" id="Mat_copa_arag"]
-albedo_color = Color(0.95, 0.76, 0.0, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="Mesh_copa_arag"]
-material = SubResource("Mat_copa_arag")
-size = Vector3(5, 4, 5)
-
-[sub_resource type="MultiMesh" id="MM_saman_tronco"]
+[sub_resource type="MultiMesh" id="MM_saman"]
 transform_format = 1
-mesh = SubResource("Mesh_tronco")
+mesh = ExtResource("5_saman")
 
-[sub_resource type="MultiMesh" id="MM_saman_copa"]
+[sub_resource type="MultiMesh" id="MM_arag"]
 transform_format = 1
-mesh = SubResource("Mesh_copa_saman")
+mesh = ExtResource("6_arag")
 
-[sub_resource type="MultiMesh" id="MM_arag_tronco"]
+[sub_resource type="MultiMesh" id="MM_arbusto"]
 transform_format = 1
-mesh = SubResource("Mesh_tronco")
-
-[sub_resource type="MultiMesh" id="MM_arag_copa"]
-transform_format = 1
-mesh = SubResource("Mesh_copa_arag")
-
-[sub_resource type="StandardMaterial3D" id="Mat_maleza"]
-albedo_color = Color(0.43, 0.55, 0.23, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="Mesh_maleza"]
-material = SubResource("Mat_maleza")
-size = Vector3(0.8, 0.8, 0.8)
+mesh = ExtResource("7_arbusto")
 
 [sub_resource type="MultiMesh" id="MM_maleza"]
 transform_format = 1
-mesh = SubResource("Mesh_maleza")
+mesh = ExtResource("8_grama")
 
 [sub_resource type="StandardMaterial3D" id="Mat_luc"]
 shading_mode = 0
@@ -127,70 +97,81 @@ shadow_enabled = true
 
 [node name="Terreno" type="GridMap" parent="."]
 mesh_library = ExtResource("2_lib")
-cell_size = Vector3(2, 2, 2)
+cell_size = Vector3(1.6, 1.6, 1.6)
 collision_layer = 1
 collision_mask = 0
 script = ExtResource("4_con")
 
 [node name="Flora" type="Node3D" parent="."]
 
-[node name="MMI_SamanTronco" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_saman_tronco")
+[node name="MMI_Saman" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_saman")
 script = ExtResource("3_esp")
-cantidad = 90
-area = Vector2(130, 130)
+cantidad = 22
+area = Vector2(120, 120)
 escala_min = 0.9
 escala_max = 1.3
 semilla = 1337
-radio_excluido = 8.0
-altura_offset = 2.5
+radio_excluido = 14.0
 
-[node name="MMI_SamanCopa" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_saman_copa")
+[node name="MMI_Araguaney" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_arag")
 script = ExtResource("3_esp")
-cantidad = 90
-area = Vector2(130, 130)
-escala_min = 0.9
+cantidad = 16
+area = Vector2(120, 120)
+escala_min = 0.8
+escala_max = 1.1
+semilla = 7
+radio_excluido = 16.0
+
+[node name="MMI_Arbustos" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_arbusto")
+script = ExtResource("3_esp")
+cantidad = 50
+area = Vector2(110, 110)
+escala_min = 0.7
 escala_max = 1.3
-semilla = 1337
-radio_excluido = 8.0
-altura_offset = 6.0
-
-[node name="MMI_AraguaneyTronco" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_arag_tronco")
-script = ExtResource("3_esp")
-cantidad = 45
-area = Vector2(130, 130)
-escala_min = 0.8
-escala_max = 1.1
-semilla = 7
-radio_excluido = 10.0
-altura_offset = 2.5
-
-[node name="MMI_AraguaneyCopa" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_arag_copa")
-script = ExtResource("3_esp")
-cantidad = 45
-area = Vector2(130, 130)
-escala_min = 0.8
-escala_max = 1.1
-semilla = 7
-radio_excluido = 10.0
-altura_offset = 6.0
+semilla = 42
+radio_excluido = 5.0
 
 [node name="MMI_Maleza" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_maleza")
 script = ExtResource("3_esp")
-cantidad = 900
-area = Vector2(120, 120)
+cantidad = 500
+area = Vector2(110, 110)
 escala_min = 0.6
-escala_max = 1.4
+escala_max = 1.5
 semilla = 99
-radio_excluido = 3.0
-altura_offset = 0.4
+radio_excluido = 2.5
+
+[node name="Corral" type="Node3D" parent="."]
+
+[node name="Vaca" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(0.5, 0, 0.866, 0, 1, 0, -0.866, 0, 0.5, 8, 0, 2)
+mesh = ExtResource("9_vaca")
+
+[node name="Toro" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(-0.342, 0, 0.94, 0, 1, 0, -0.94, 0, -0.342, 11, 0, -4)
+mesh = ExtResource("10_toro")
+
+[node name="Caballo" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -9, 0, 1)
+mesh = ExtResource("11_caballo")
+
+[node name="Cerdo" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 6, 0, -9)
+mesh = ExtResource("12_cerdo")
+
+[node name="Gallina" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 6)
+mesh = ExtResource("13_gallina")
+
+[node name="Gallo" type="MeshInstance3D" parent="Corral"]
+transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, -5, 0, 5)
+mesh = ExtResource("14_gallo")
 
 [node name="Cabana" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -50)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40)
 collision_layer = 1
 collision_mask = 0
 
@@ -209,7 +190,7 @@ mesh = SubResource("Mesh_techo")
 [node name="Atmosfera" type="Node3D" parent="."]
 
 [node name="Luciernagas" type="CPUParticles3D" parent="Atmosfera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -42)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -34)
 amount = 90
 lifetime = 5.0
 mesh = SubResource("Mesh_luc")

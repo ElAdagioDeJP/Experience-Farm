@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ck35lq7kagvdo"
+path="res://.godot/imported/arbusto.obj-51242058e5c74ebe739db6ae8a6efcad.mesh"
+
+[deps]
+
+files=["res://.godot/imported/arbusto.obj-51242058e5c74ebe739db6ae8a6efcad.mesh"]
+
+source_file="res://assets/models/arbusto.obj"
+dest_files=["res://.godot/imported/arbusto.obj-51242058e5c74ebe739db6ae8a6efcad.mesh", "res://.godot/imported/arbusto.obj-51242058e5c74ebe739db6ae8a6efcad.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
