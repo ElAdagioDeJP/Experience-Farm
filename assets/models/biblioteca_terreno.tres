@@ -1,0 +1,51 @@
+[gd_resource type="MeshLibrary" load_steps=11 format=3 uid="uid://cterrenolib0farm"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_grama"]
+albedo_color = Color(0.478, 0.604, 0.235, 1)
+metallic = 0.0
+roughness = 1.0
+specular_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_tierra"]
+albedo_color = Color(0.482, 0.333, 0.208, 1)
+metallic = 0.0
+roughness = 1.0
+specular_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_camino"]
+albedo_color = Color(0.608, 0.545, 0.416, 1)
+metallic = 0.0
+roughness = 1.0
+specular_mode = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_grama"]
+material = SubResource("Mat_grama")
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tierra"]
+material = SubResource("Mat_tierra")
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_camino"]
+material = SubResource("Mat_camino")
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape_celda"]
+size = Vector3(2, 2, 2)
+
+[resource]
+item/0/name = "grama"
+item/0/mesh = SubResource("BoxMesh_grama")
+item/0/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/0/shapes = [SubResource("BoxShape_celda"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
+item/0/navigation_layers = 0
+item/1/name = "tierra"
+item/1/mesh = SubResource("BoxMesh_tierra")
+item/1/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/1/shapes = [SubResource("BoxShape_celda"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
+item/1/navigation_layers = 0
+item/2/name = "camino"
+item/2/mesh = SubResource("BoxMesh_camino")
+item/2/mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+item/2/shapes = [SubResource("BoxShape_celda"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)]
+item/2/navigation_layers = 0

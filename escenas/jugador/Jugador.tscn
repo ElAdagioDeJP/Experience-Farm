@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1jugador0farm1"]
+
+[ext_resource type="Script" path="res://escenas/jugador/Jugador.gd" id="1_jugador"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jugador"]
+radius = 0.3
+height = 1.8
+
+[node name="Jugador" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_jugador")
+
+[node name="Colision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_jugador")
+
+[node name="PivoteCamara" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="Camara" type="Camera3D" parent="PivoteCamara"]
+current = true

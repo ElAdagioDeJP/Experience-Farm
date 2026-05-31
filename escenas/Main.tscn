@@ -1,0 +1,156 @@
+[gd_scene load_steps=20 format=3 uid="uid://dmainfarm00001"]
+
+[ext_resource type="PackedScene" uid="uid://b1jugador0farm1" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
+[ext_resource type="MeshLibrary" uid="uid://cterrenolib0farm" path="res://assets/models/biblioteca_terreno.tres" id="2_lib"]
+[ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="3_esp"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+sky_top_color = Color(0.45, 0.62, 0.82, 1)
+sky_horizon_color = Color(0.98, 0.85, 0.62, 1)
+ground_bottom_color = Color(0.55, 0.46, 0.32, 1)
+ground_horizon_color = Color(0.98, 0.85, 0.62, 1)
+sun_angle_max = 30.0
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_energy = 0.4
+tonemap_mode = 3
+fog_enabled = true
+fog_light_color = Color(1.0, 0.9, 0.69, 1)
+fog_density = 0.012
+
+[sub_resource type="StandardMaterial3D" id="Mat_suelo"]
+albedo_color = Color(0.478, 0.604, 0.235, 1)
+metallic = 0.0
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_suelo"]
+material = SubResource("Mat_suelo")
+size = Vector3(200, 1, 200)
+
+[sub_resource type="BoxShape3D" id="Shape_suelo"]
+size = Vector3(200, 1, 200)
+
+[sub_resource type="StandardMaterial3D" id="Mat_arbol"]
+albedo_color = Color(0.31, 0.48, 0.22, 1)
+metallic = 0.0
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_arbol"]
+material = SubResource("Mat_arbol")
+size = Vector3(2.5, 8, 2.5)
+
+[sub_resource type="MultiMesh" id="MM_saman"]
+transform_format = 1
+mesh = SubResource("Mesh_arbol")
+
+[sub_resource type="MultiMesh" id="MM_araguaney"]
+transform_format = 1
+mesh = SubResource("Mesh_arbol")
+
+[sub_resource type="StandardMaterial3D" id="Mat_maleza"]
+albedo_color = Color(0.43, 0.55, 0.23, 1)
+metallic = 0.0
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Mesh_maleza"]
+material = SubResource("Mat_maleza")
+size = Vector3(0.8, 0.8, 0.8)
+
+[sub_resource type="MultiMesh" id="MM_maleza"]
+transform_format = 1
+mesh = SubResource("Mesh_maleza")
+
+[sub_resource type="StandardMaterial3D" id="Mat_luc"]
+shading_mode = 0
+albedo_color = Color(1.0, 0.94, 0.62, 1)
+emission_enabled = true
+emission = Color(1.0, 0.94, 0.62, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="Mesh_luc"]
+material = SubResource("Mat_luc")
+size = Vector3(0.12, 0.12, 0.12)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_1")
+
+[node name="SolDireccional" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.353, 0.353, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 20, 0)
+light_color = Color(1.0, 0.92, 0.77, 1)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Terreno" type="GridMap" parent="."]
+mesh_library = ExtResource("2_lib")
+cell_size = Vector3(2, 2, 2)
+collision_layer = 1
+collision_mask = 0
+
+[node name="SueloProvisional" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Malla" type="MeshInstance3D" parent="SueloProvisional"]
+mesh = SubResource("Mesh_suelo")
+
+[node name="Colision" type="CollisionShape3D" parent="SueloProvisional"]
+shape = SubResource("Shape_suelo")
+
+[node name="Flora" type="Node3D" parent="."]
+
+[node name="MMI_Saman" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_saman")
+script = ExtResource("3_esp")
+cantidad = 120
+area = Vector2(140, 140)
+semilla = 1337
+
+[node name="MMI_Araguaney" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_araguaney")
+script = ExtResource("3_esp")
+cantidad = 60
+area = Vector2(140, 140)
+escala_min = 0.8
+escala_max = 1.1
+semilla = 7
+radio_excluido = 10.0
+
+[node name="MMI_Maleza" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_maleza")
+script = ExtResource("3_esp")
+cantidad = 1200
+area = Vector2(150, 150)
+escala_min = 0.6
+escala_max = 1.4
+semilla = 99
+radio_excluido = 3.0
+
+[node name="Atmosfera" type="Node3D" parent="."]
+
+[node name="Luciernagas" type="CPUParticles3D" parent="Atmosfera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -12)
+amount = 80
+lifetime = 5.0
+mesh = SubResource("Mesh_luc")
+emission_shape = 1
+emission_box_extents = Vector3(8, 1.5, 8)
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.1
+initial_velocity_max = 0.5
+damping_min = 0.2
+damping_max = 0.6
+
+[node name="PuntoSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18)
+
+[node name="Jugador" parent="." instance=ExtResource("1_jug")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18)
