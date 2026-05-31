@@ -16,6 +16,7 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/gallo.obj" id="14_gallo"]
 [ext_resource type="ArrayMesh" path="res://assets/models/montana.obj" id="15_montana"]
 [ext_resource type="PackedScene" path="res://assets/models/grass.glb" id="16_grass"]
+[ext_resource type="PackedScene" path="res://assets/models/farm_set_part_2.glb" id="17_farmset"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.78, 1)
@@ -232,6 +233,9 @@ shape = SubResource("Shape_cabana")
 [node name="Techo" type="MeshInstance3D" parent="Cabana"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
 mesh = SubResource("Mesh_techo")
+
+[node name="DetallesGranja" parent="." instance=ExtResource("17_farmset")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -68)
 
 [node name="Atmosfera" type="Node3D" parent="."]
 
