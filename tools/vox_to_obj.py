@@ -55,12 +55,14 @@ def parsear_vox(path):
                 x, y, z, c = content[4 + i * 4: 8 + i * 4]
                 voxels.append((x, y, z, c))
         elif cid == b"RGBA":
-            palette = [0x00000000]  # indice 0 = vacio
+            # Este MCP escribe .vox donde el voxel de valor v usa RGBA[v]
+            # (no el estandar RGBA[v-1]). Indexamos directo: palette[v] = RGBA[v].
+            palette = []
             for i in range(256):
                 r, g, b, a = content[i * 4: i * 4 + 4]
                 palette.append((r, g, b, a))
     if palette is None:
-        palette = [(0, 0, 0, 0)] + [(136, 136, 136, 255)] * 256
+        palette = [(136, 136, 136, 255)] * 256
     return size, voxels, palette
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=34 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="MeshLibrary" path="res://assets/models/biblioteca_terreno.tres" id="2_lib"]
@@ -14,6 +14,8 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/cerdo.obj" id="12_cerdo"]
 [ext_resource type="ArrayMesh" path="res://assets/models/gallina.obj" id="13_gallina"]
 [ext_resource type="ArrayMesh" path="res://assets/models/gallo.obj" id="14_gallo"]
+[ext_resource type="ArrayMesh" path="res://assets/models/montana.obj" id="15_montana"]
+[ext_resource type="PackedScene" path="res://assets/models/grass.glb" id="16_grass"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.35, 0.55, 0.78, 1)
@@ -33,7 +35,7 @@ tonemap_mode = 2
 tonemap_exposure = 1.0
 fog_enabled = true
 fog_light_color = Color(0.74, 0.8, 0.86, 1)
-fog_density = 0.0016
+fog_density = 0.001
 fog_aerial_perspective = 0.5
 
 [sub_resource type="MultiMesh" id="MM_saman"]
@@ -51,6 +53,9 @@ mesh = ExtResource("7_arbusto")
 [sub_resource type="MultiMesh" id="MM_maleza"]
 transform_format = 1
 mesh = ExtResource("8_grama")
+
+[sub_resource type="MultiMesh" id="MM_grass"]
+transform_format = 1
 
 [sub_resource type="StandardMaterial3D" id="Mat_luc"]
 shading_mode = 0
@@ -102,47 +107,88 @@ collision_layer = 1
 collision_mask = 0
 script = ExtResource("4_con")
 
+[node name="Montanas" type="Node3D" parent="."]
+
+[node name="M1" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, -170)
+mesh = ExtResource("15_montana")
+
+[node name="M2" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(0, 0, 4.5, 0, 4.5, 0, -4.5, 0, 0, 120, 0, -120)
+mesh = ExtResource("15_montana")
+
+[node name="M3" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 165, 0, -10)
+mesh = ExtResource("15_montana")
+
+[node name="M4" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(0, 0, -4.5, 0, 4.5, 0, 4.5, 0, 0, -120, 0, -120)
+mesh = ExtResource("15_montana")
+
+[node name="M5" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(-4, 0, 0, 0, 4, 0, 0, 0, -4, -165, 0, -10)
+mesh = ExtResource("15_montana")
+
+[node name="M6" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, -70, 0, -175)
+mesh = ExtResource("15_montana")
+
+[node name="M7" type="MeshInstance3D" parent="Montanas"]
+transform = Transform3D(0, 0, 5, 0, 5, 0, -5, 0, 0, 70, 0, -175)
+mesh = ExtResource("15_montana")
+
 [node name="Flora" type="Node3D" parent="."]
 
 [node name="MMI_Saman" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_saman")
 script = ExtResource("3_esp")
-cantidad = 22
-area = Vector2(120, 120)
+cantidad = 40
+area = Vector2(180, 190)
 escala_min = 0.9
-escala_max = 1.3
+escala_max = 1.4
 semilla = 1337
-radio_excluido = 14.0
+radio_excluido = 16.0
 
 [node name="MMI_Araguaney" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arag")
 script = ExtResource("3_esp")
-cantidad = 16
-area = Vector2(120, 120)
+cantidad = 28
+area = Vector2(180, 190)
 escala_min = 0.8
-escala_max = 1.1
+escala_max = 1.2
 semilla = 7
-radio_excluido = 16.0
+radio_excluido = 18.0
 
 [node name="MMI_Arbustos" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arbusto")
 script = ExtResource("3_esp")
-cantidad = 50
-area = Vector2(110, 110)
+cantidad = 110
+area = Vector2(170, 180)
 escala_min = 0.7
-escala_max = 1.3
+escala_max = 1.4
 semilla = 42
 radio_excluido = 5.0
 
 [node name="MMI_Maleza" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_maleza")
 script = ExtResource("3_esp")
-cantidad = 500
-area = Vector2(110, 110)
+cantidad = 1000
+area = Vector2(170, 180)
 escala_min = 0.6
 escala_max = 1.5
 semilla = 99
 radio_excluido = 2.5
+
+[node name="MMI_Pasto" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_grass")
+script = ExtResource("3_esp")
+malla_desde_escena = ExtResource("16_grass")
+cantidad = 1800
+area = Vector2(170, 180)
+escala_min = 0.8
+escala_max = 1.4
+semilla = 5
+radio_excluido = 2.0
 
 [node name="Corral" type="Node3D" parent="."]
 
@@ -171,7 +217,7 @@ transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, -5, 0, 5)
 mesh = ExtResource("14_gallo")
 
 [node name="Cabana" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -80)
 collision_layer = 1
 collision_mask = 0
 
@@ -190,12 +236,12 @@ mesh = SubResource("Mesh_techo")
 [node name="Atmosfera" type="Node3D" parent="."]
 
 [node name="Luciernagas" type="CPUParticles3D" parent="Atmosfera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -34)
-amount = 90
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -72)
+amount = 120
 lifetime = 5.0
 mesh = SubResource("Mesh_luc")
 emission_shape = 1
-emission_box_extents = Vector3(10, 2, 10)
+emission_box_extents = Vector3(14, 2, 14)
 gravity = Vector3(0, 0, 0)
 initial_velocity_min = 0.1
 initial_velocity_max = 0.5
@@ -203,7 +249,7 @@ damping_min = 0.2
 damping_max = 0.6
 
 [node name="PuntoSpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 34)
 
 [node name="Jugador" parent="." instance=ExtResource("1_jug")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 34)

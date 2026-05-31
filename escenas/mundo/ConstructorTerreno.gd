@@ -8,9 +8,9 @@ const ITEM_TIERRA := 1
 const ITEM_CAMINO := 2
 
 ## Mitad del ancho del campo en celdas (campo = (2*ancho+1) celdas en X).
-@export var ancho_campo: int = 28
-@export var z_inicio: int = 12    # borde detrás del spawn (grid z)
-@export var z_fin: int = -26      # borde en la cabaña (grid z)
+@export var ancho_campo: int = 56
+@export var z_inicio: int = 24    # borde detrás del spawn (grid z)
+@export var z_fin: int = -52      # borde en la cabaña (grid z)
 @export var ancho_sendero: int = 1 # celdas a cada lado del centro (sendero = 2*esto+1)
 
 

@@ -7,7 +7,7 @@ extends CharacterBody3D
 ##       Camara (Camera3D)
 
 # --- Parámetros ajustables desde el Inspector ---
-@export var velocidad: float = 4.0            # m/s en el plano horizontal
+@export var velocidad: float = 6.0            # m/s en el plano horizontal
 @export var sensibilidad_mouse: float = 0.0025 # radianes por píxel de movimiento del mouse
 @export var gravedad: float = 18.0            # caída; mantiene al jugador pegado al GridMap
 @export var limite_pitch_grados: float = 89.0 # tope vertical de cámara (evita voltearse de cabeza)

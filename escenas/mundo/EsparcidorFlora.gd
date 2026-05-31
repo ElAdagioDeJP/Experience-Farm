@@ -13,13 +13,37 @@ extends MultiMeshInstance3D
 @export var radio_excluido: float = 6.0
 ## Altura (Y) a la que se centra cada instancia. Sube la copa sobre el tronco.
 @export var altura_offset: float = 0.0
+## Opcional: extrae la malla del primer MeshInstance3D de esta escena (.glb) y la
+## usa en el MultiMesh. Util para reusar assets .glb (pasto) sin .tres aparte.
+@export var malla_desde_escena: PackedScene
 
 
 func _ready() -> void:
 	if multimesh == null:
 		push_warning("EsparcidorFlora: falta el recurso MultiMesh en %s" % name)
 		return
+	if malla_desde_escena:
+		var m := _extraer_malla(malla_desde_escena)
+		if m:
+			multimesh.mesh = m
+	if multimesh.mesh == null:
+		push_warning("EsparcidorFlora: MultiMesh sin malla en %s" % name)
+		return
 	_poblar()
+
+
+func _extraer_malla(escena: PackedScene) -> Mesh:
+	var inst := escena.instantiate()
+	var malla: Mesh = null
+	var pila: Array = [inst]
+	while pila and malla == null:
+		var n = pila.pop_back()
+		if n is MeshInstance3D and n.mesh:
+			malla = n.mesh
+		for h in n.get_children():
+			pila.append(h)
+	inst.free()
+	return malla
 
 
 func _poblar() -> void:

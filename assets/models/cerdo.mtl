@@ -1,26 +1,26 @@
 newmtl c24
-Kd 0.0902 0.0902 0.0902
-Ka 0 0 0
-Ks 0 0 0
-illum 1
-d 1
-
-newmtl c25
 Kd 0.3608 0.2902 0.2902
 Ka 0 0 0
 Ks 0 0 0
 illum 1
 d 1
 
+newmtl c25
+Kd 0.1020 0.1020 0.1020
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
 newmtl c29
-Kd 0.1098 0.1098 0.1098
+Kd 0.9098 0.6275 0.6588
 Ka 0 0 0
 Ks 0 0 0
 illum 1
 d 1
 
 newmtl c30
-Kd 0.9098 0.6275 0.6588
+Kd 0.7882 0.4902 0.5255
 Ka 0 0 0
 Ks 0 0 0
 illum 1

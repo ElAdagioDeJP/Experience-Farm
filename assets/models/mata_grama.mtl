@@ -1,19 +1,19 @@
 newmtl c9
-Kd 0.0314 0.0314 0.0314
-Ka 0 0 0
-Ks 0 0 0
-illum 1
-d 1
-
-newmtl c10
 Kd 0.4314 0.5490 0.2275
 Ka 0 0 0
 Ks 0 0 0
 illum 1
 d 1
 
+newmtl c10
+Kd 0.5490 0.6667 0.3137
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
 newmtl c17
-Kd 0.0627 0.0627 0.0627
+Kd 0.6902 0.6275 0.3137
 Ka 0 0 0
 Ks 0 0 0
 illum 1
