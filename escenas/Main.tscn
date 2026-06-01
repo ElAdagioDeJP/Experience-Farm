@@ -153,10 +153,10 @@ curve = SubResource("Curve_camino")
 script = ExtResource("22_camin")
 camino = NodePath("../CaminoOrganico")
 malla_tile = ExtResource("21_losa")
-paso = 1.92
+paso = 1.4
 filas = 2
-escala_xy = 0.12
-escala_y = 0.035
+escala_xy = 0.09
+escala_y = 0.06
 
 [node name="Colinas" type="Node3D" parent="."]
 
@@ -266,8 +266,8 @@ multimesh = SubResource("MM_grama")
 script = ExtResource("2_esp")
 cantidad = 18000
 area = Vector2(290, 290)
-escala_min = 0.04
-escala_max = 0.08
+escala_min = 0.07
+escala_max = 0.14
 semilla = 99
 distancia_min = 0.0
 radio_excluido = 4.0
@@ -279,8 +279,8 @@ multimesh = SubResource("MM_seca")
 script = ExtResource("2_esp")
 cantidad = 13000
 area = Vector2(290, 290)
-escala_min = 0.03
-escala_max = 0.06
+escala_min = 0.05
+escala_max = 0.10
 semilla = 314
 distancia_min = 0.0
 radio_excluido = 3.5
