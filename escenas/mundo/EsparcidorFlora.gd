@@ -52,37 +52,47 @@ func _cerca_del_camino(xz: Vector2) -> bool:
 
 
 func _poblar_poisson() -> void:
-	## Poisson Disk Sampling simplificado (dart throwing con rechazo):
-	## - Lanza un candidato aleatorio.
-	## - Acepta si esta a >= distancia_min de todos los aceptados.
-	## - Itera hasta cantidad aceptados o max_intentos.
+	## Cuando distancia_min <= 0, usa scatter aleatorio puro (O(n)) — necesario
+	## para cantidades altas (>5000) donde Poisson O(n²) cuelga el juego.
+	## Cuando distancia_min > 0, usa Poisson dart throwing con rechazo.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
 
 	var aceptados: PackedVector2Array = []
-	var max_intentos := cantidad * 40
-	var intentos := 0
 
-	while aceptados.size() < cantidad and intentos < max_intentos:
-		intentos += 1
-		var px := rng.randf_range(-area.x * 0.5, area.x * 0.5)
-		var pz := rng.randf_range(-area.y * 0.5, area.y * 0.5)
-		var xz := Vector2(px, pz)
-
-		# Zona excluida alrededor del spawn/origen.
-		if xz.length() < radio_excluido:
-			continue
-		# Zona excluida del camino organico.
-		if _cerca_del_camino(xz):
-			continue
-		# Chequeo Poisson: distancia minima respecto a todos los aceptados.
-		var valido := true
-		for a in aceptados:
-			if xz.distance_to(a) < distancia_min:
-				valido = false
-				break
-		if valido:
+	if distancia_min <= 0.0:
+		# Scatter aleatorio: sin chequeo de vecinos, solo zonas de exclusion.
+		var intentos := 0
+		var max_intentos := cantidad * 8
+		while aceptados.size() < cantidad and intentos < max_intentos:
+			intentos += 1
+			var px := rng.randf_range(-area.x * 0.5, area.x * 0.5)
+			var pz := rng.randf_range(-area.y * 0.5, area.y * 0.5)
+			var xz := Vector2(px, pz)
+			if xz.length() < radio_excluido:
+				continue
+			if _cerca_del_camino(xz):
+				continue
 			aceptados.append(xz)
+	else:
+		var max_intentos := cantidad * 40
+		var intentos := 0
+		while aceptados.size() < cantidad and intentos < max_intentos:
+			intentos += 1
+			var px := rng.randf_range(-area.x * 0.5, area.x * 0.5)
+			var pz := rng.randf_range(-area.y * 0.5, area.y * 0.5)
+			var xz := Vector2(px, pz)
+			if xz.length() < radio_excluido:
+				continue
+			if _cerca_del_camino(xz):
+				continue
+			var valido := true
+			for a in aceptados:
+				if xz.distance_to(a) < distancia_min:
+					valido = false
+					break
+			if valido:
+				aceptados.append(xz)
 
 	# Colocar instancias en el MultiMesh.
 	var n_real := aceptados.size()
