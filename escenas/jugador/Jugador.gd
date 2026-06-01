@@ -17,6 +17,7 @@ extends CharacterBody3D
 
 
 func _ready() -> void:
+	add_to_group("jugador")
 	# Capturar y ocultar el cursor al iniciar la escena: el mouse pasa a controlar la cámara.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 

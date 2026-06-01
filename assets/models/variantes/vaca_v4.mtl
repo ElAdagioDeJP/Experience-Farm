@@ -1,0 +1,35 @@
+newmtl c22
+Kd 0.9098 0.7686 0.7529
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c23
+Kd 0.9020 0.8667 0.7686
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c24
+Kd 0.2275 0.2275 0.2275
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c25
+Kd 0.1020 0.1020 0.1020
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c27
+Kd 0.1059 0.1059 0.1059
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
