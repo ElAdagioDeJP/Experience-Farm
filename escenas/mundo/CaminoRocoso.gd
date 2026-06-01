@@ -1,14 +1,15 @@
 extends Node3D
-## Genera visualmente el camino de tierra/piedra muestreando el Curve3D del Path3D
-## y colocando instancias de tile_tierra via MultiMesh. Crea el camino "de dentro"
-## sin necesidad de GridMap ni tiles manuales.
+## Genera el camino de piedra organico muestreando el Curve3D.
+## Coloca losas de piedra irregulares (piedra_losa.vox) con rotacion y escala
+## variables para imitar un empedrado natural de tierra, no una cuadricula.
 
 @export var camino: NodePath
 @export var malla_tile: Mesh
-@export var paso: float = 1.92          # separacion entre filas (= 16 vox * 0.12)
-@export var filas: int = 2              # columnas a cada lado del eje (total 2*filas+1)
-@export var escala_xy: float = 0.12     # escala horizontal por tile
-@export var escala_y: float = 0.04     # escala vertical (tile plano, casi flush)
+@export var paso: float = 1.4            # distancia base entre losas (metros)
+@export var filas: int = 2               # losas a cada lado del eje
+@export var escala_xy: float = 0.09      # escala horizontal
+@export var escala_y: float = 0.055      # escala vertical (losa plana)
+@export var probabilidad: float = 0.72   # prob de colocar cada losa (saltos naturales)
 
 
 func _ready() -> void:
@@ -23,7 +24,7 @@ func _ready() -> void:
 	var curve: Curve3D = (np as Path3D).curve
 	var largo: float = curve.get_baked_length()
 	var rng := RandomNumberGenerator.new()
-	rng.seed = 9812
+	rng.seed = 4471
 
 	var transforms: Array[Transform3D] = []
 	var t: float = 0.0
@@ -43,14 +44,28 @@ func _ready() -> void:
 			perp = perp.normalized()
 
 		for f in range(-filas, filas + 1):
-			var offset: Vector3 = perp * (f * paso)
-			var pos := Vector3(pa.x + offset.x, -0.05, pa.z + offset.z)
-			var rot_y: float = rng.randf_range(-0.25, 0.25)
-			var sx: float = escala_xy + rng.randf_range(-0.01, 0.02)
+			# Omitir aleatoriamente para huecos naturales en el empedrado
+			if rng.randf() > probabilidad:
+				continue
+
+			# Offset perpendicular con jitter para aspecto organico
+			var jitter_perp: float = rng.randf_range(-0.5, 0.5)
+			var jitter_tang: float = rng.randf_range(-0.4, 0.4)
+			var offset: Vector3 = perp * (f * paso + jitter_perp) + tang * jitter_tang
+			var pos := Vector3(pa.x + offset.x, -0.04, pa.z + offset.z)
+
+			# Rotacion libre: stepping stones giran cualquier angulo
+			var rot_y: float = rng.randf_range(0.0, TAU)
+			# Escala variable: mezcla de losas grandes y chicas
+			var sc_factor: float = rng.randf_range(0.65, 1.35)
+			var sx: float = escala_xy * sc_factor
+			var sy: float = escala_y
+
 			var b := Basis().rotated(Vector3.UP, rot_y)
-			b = b.scaled(Vector3(sx, escala_y, sx))
+			b = b.scaled(Vector3(sx, sy, sx))
 			transforms.append(Transform3D(b, pos))
-		t += paso
+
+		t += paso + rng.randf_range(-0.2, 0.3)  # paso variable: empedrado irregular
 
 	var mm := MultiMesh.new()
 	mm.mesh = malla_tile

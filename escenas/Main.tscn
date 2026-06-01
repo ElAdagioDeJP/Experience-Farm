@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=41 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="2_esp"]
@@ -20,8 +20,9 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/grama_seca.obj" id="18_seca"]
 [ext_resource type="ArrayMesh" path="res://assets/models/nube.obj" id="19_nube"]
 [ext_resource type="Script" path="res://escenas/mundo/NubesDinamicas.gd" id="20_nubes"]
-[ext_resource type="ArrayMesh" path="res://assets/models/tile_tierra.obj" id="21_tierra"]
+[ext_resource type="ArrayMesh" path="res://assets/models/piedra_losa.obj" id="21_losa"]
 [ext_resource type="Script" path="res://escenas/mundo/CaminoRocoso.gd" id="22_camin"]
+[ext_resource type="ArrayMesh" path="res://assets/models/tile_tierra.obj" id="23_tierra"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.28, 0.50, 0.80, 1)
@@ -74,16 +75,22 @@ mesh = ExtResource("7_grama")
 transform_format = 1
 mesh = ExtResource("18_seca")
 
+[sub_resource type="Gradient" id="Grad_luc"]
+offsets = PackedFloat32Array(0, 0.12, 0.78, 1)
+colors = PackedColorArray(1, 0.94, 0.62, 0, 1, 0.94, 0.62, 1, 1, 0.94, 0.62, 1, 1, 0.94, 0.62, 0)
+
 [sub_resource type="StandardMaterial3D" id="Mat_luc"]
+transparency = 1
 shading_mode = 0
 albedo_color = Color(1.0, 0.94, 0.62, 1)
+vertex_color_use_as_albedo = true
 emission_enabled = true
 emission = Color(1.0, 0.94, 0.62, 1)
-emission_energy_multiplier = 3.0
+emission_energy_multiplier = 2.5
 
 [sub_resource type="BoxMesh" id="Mesh_luc"]
 material = SubResource("Mat_luc")
-size = Vector3(0.12, 0.12, 0.12)
+size = Vector3(0.05, 0.05, 0.05)
 
 [sub_resource type="BoxShape3D" id="Shape_muro_ns"]
 size = Vector3(320, 50, 4)
@@ -145,7 +152,7 @@ curve = SubResource("Curve_camino")
 [node name="CaminoRocoso" type="Node3D" parent="."]
 script = ExtResource("22_camin")
 camino = NodePath("../CaminoOrganico")
-malla_tile = ExtResource("21_tierra")
+malla_tile = ExtResource("21_losa")
 paso = 1.92
 filas = 2
 escala_xy = 0.12
@@ -219,7 +226,7 @@ cast_shadow = 0
 multimesh = SubResource("MM_saman")
 script = ExtResource("2_esp")
 cantidad = 32
-area = Vector2(240, 240)
+area = Vector2(320, 320)
 escala_min = 1.8
 escala_max = 2.8
 semilla = 1337
@@ -232,7 +239,7 @@ radio_camino = 10.0
 multimesh = SubResource("MM_arag")
 script = ExtResource("2_esp")
 cantidad = 22
-area = Vector2(240, 240)
+area = Vector2(320, 320)
 escala_min = 1.5
 escala_max = 2.2
 semilla = 7
@@ -244,10 +251,10 @@ radio_camino = 10.0
 [node name="MMI_Arbustos" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arbusto")
 script = ExtResource("2_esp")
-cantidad = 120
-area = Vector2(240, 240)
-escala_min = 0.12
-escala_max = 0.28
+cantidad = 160
+area = Vector2(330, 330)
+escala_min = 0.06
+escala_max = 0.14
 semilla = 42
 distancia_min = 3.5
 radio_excluido = 8.0
@@ -257,10 +264,10 @@ radio_camino = 7.0
 [node name="MMI_GramaAlta" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_grama")
 script = ExtResource("2_esp")
-cantidad = 1500
-area = Vector2(240, 240)
-escala_min = 0.07
-escala_max = 0.15
+cantidad = 1800
+area = Vector2(290, 290)
+escala_min = 0.04
+escala_max = 0.08
 semilla = 99
 distancia_min = 0.8
 radio_excluido = 4.0
@@ -270,10 +277,10 @@ radio_camino = 5.0
 [node name="MMI_GramaSeca" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_seca")
 script = ExtResource("2_esp")
-cantidad = 1100
-area = Vector2(240, 240)
-escala_min = 0.05
-escala_max = 0.12
+cantidad = 1300
+area = Vector2(290, 290)
+escala_min = 0.03
+escala_max = 0.06
 semilla = 314
 distancia_min = 0.8
 radio_excluido = 3.5
@@ -281,30 +288,30 @@ camino = NodePath("../../CaminoOrganico")
 radio_camino = 5.0
 
 [node name="Animales" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -105)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 35)
 
 [node name="Vaca" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(0.065, 0, 0.075, 0, 0.1, 0, -0.075, 0, 0.065, 10, 0, 6)
+transform = Transform3D(0.035, 0, 0.035, 0, 0.05, 0, -0.035, 0, 0.035, 10, 0, 6)
 mesh = ExtResource("9_vaca")
 
 [node name="Toro" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(-0.055, 0, 0.085, 0, 0.1, 0, -0.085, 0, -0.055, 15, 0, -4)
+transform = Transform3D(0.055, 0, 0, 0, 0.055, 0, 0, 0, 0.055, 18, 0, -5)
 mesh = ExtResource("10_toro")
 
 [node name="Caballo" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(0, 0, -0.09, 0, 0.1, 0, 0.09, 0, 0, -12, 0, 2)
+transform = Transform3D(0, 0, -0.05, 0, 0.05, 0, 0.05, 0, 0, -14, 0, 2)
 mesh = ExtResource("11_caballo")
 
 [node name="Cerdo" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(0.07, 0, 0.07, 0, 0.08, 0, -0.07, 0, 0.07, 8, 0, -12)
+transform = Transform3D(0.038, 0, 0, 0, 0.038, 0, 0, 0, 0.038, 12, 0, -14)
 mesh = ExtResource("12_cerdo")
 
 [node name="Gallina" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(0.06, 0, 0, 0, 0.06, 0, 0, 0, 0.06, -8, 0, 9)
+transform = Transform3D(0.038, 0, 0, 0, 0.038, 0, 0, 0, 0.038, -10, 0, 8)
 mesh = ExtResource("13_gallina")
 
 [node name="Gallo" type="MeshInstance3D" parent="Animales"]
-transform = Transform3D(0.065, 0, -0.04, 0, 0.065, 0, 0.04, 0, 0.065, -6, 0, 7)
+transform = Transform3D(0.04, 0, -0.02, 0, 0.04, 0, 0.02, 0, 0.04, -8, 0, 5)
 mesh = ExtResource("14_gallo")
 
 [node name="Granja" type="Node3D" parent="."]
@@ -365,17 +372,29 @@ script = ExtResource("17_coltri")
 [node name="Atmosfera" type="Node3D" parent="."]
 
 [node name="Luciernagas" type="CPUParticles3D" parent="Atmosfera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -108)
-amount = 130
-lifetime = 5.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -40)
+amount = 45
+lifetime = 6.0
+randomness = 1.0
 mesh = SubResource("Mesh_luc")
+color_ramp = SubResource("Grad_luc")
 emission_shape = 1
-emission_box_extents = Vector3(16, 2, 16)
+emission_box_extents = Vector3(40, 2.5, 40)
+direction = Vector3(0, 1, 0)
+spread = 90.0
 gravity = Vector3(0, 0, 0)
-initial_velocity_min = 0.1
-initial_velocity_max = 0.5
-damping_min = 0.2
-damping_max = 0.6
+initial_velocity_min = 0.04
+initial_velocity_max = 0.18
+angular_velocity_min = -40.0
+angular_velocity_max = 40.0
+orbit_velocity_min = 0.04
+orbit_velocity_max = 0.14
+radial_accel_min = -0.06
+radial_accel_max = 0.06
+tangential_accel_min = -0.08
+tangential_accel_max = 0.08
+damping_min = 0.05
+damping_max = 0.15
 
 [node name="Nubes" type="Node3D" parent="Atmosfera"]
 script = ExtResource("20_nubes")
