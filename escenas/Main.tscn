@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=34 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="2_esp"]
@@ -14,6 +14,9 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/cerdo.obj" id="12_cerdo"]
 [ext_resource type="ArrayMesh" path="res://assets/models/gallina.obj" id="13_gallina"]
 [ext_resource type="ArrayMesh" path="res://assets/models/gallo.obj" id="14_gallo"]
+[ext_resource type="ArrayMesh" path="res://assets/models/granero.obj" id="15_granero"]
+[ext_resource type="ArrayMesh" path="res://assets/models/cerca.obj" id="16_cerca"]
+[ext_resource type="Script" path="res://escenas/mundo/ColisionTrimesh.gd" id="17_coltri"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.36, 0.56, 0.8, 1)
@@ -81,27 +84,6 @@ emission_energy_multiplier = 3.0
 [sub_resource type="BoxMesh" id="Mesh_luc"]
 material = SubResource("Mat_luc")
 size = Vector3(0.12, 0.12, 0.12)
-
-[sub_resource type="StandardMaterial3D" id="Mat_cabana"]
-albedo_color = Color(0.78, 0.66, 0.47, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="BoxMesh" id="Mesh_cabana"]
-material = SubResource("Mat_cabana")
-size = Vector3(8, 5, 8)
-
-[sub_resource type="BoxShape3D" id="Shape_cabana"]
-size = Vector3(8, 5, 8)
-
-[sub_resource type="StandardMaterial3D" id="Mat_techo"]
-albedo_color = Color(0.61, 0.23, 0.18, 1)
-metallic = 0.0
-roughness = 1.0
-
-[sub_resource type="PrismMesh" id="Mesh_techo"]
-material = SubResource("Mat_techo")
-size = Vector3(9, 3, 9)
 
 [sub_resource type="BoxShape3D" id="Shape_muro_ns"]
 size = Vector3(320, 50, 4)
@@ -280,22 +262,60 @@ mesh = ExtResource("13_gallina")
 transform = Transform3D(1.3, 0, -0.75, 0, 1.5, 0, 0.75, 0, 1.3, -6, 0, 7)
 mesh = ExtResource("14_gallo")
 
-[node name="Cabana" type="StaticBody3D" parent="."]
+[node name="Granja" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -120)
-collision_layer = 1
-collision_mask = 0
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Cabana"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-mesh = SubResource("Mesh_cabana")
+[node name="Granero" type="MeshInstance3D" parent="Granja"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
+mesh = ExtResource("15_granero")
+script = ExtResource("17_coltri")
 
-[node name="Colision" type="CollisionShape3D" parent="Cabana"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-shape = SubResource("Shape_cabana")
+[node name="Corral" type="Node3D" parent="Granja"]
 
-[node name="Techo" type="MeshInstance3D" parent="Cabana"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0)
-mesh = SubResource("Mesh_techo")
+[node name="CercaF1" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 5.5, 0, 3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaF2" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 7.9, 0, 3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaF3" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 10.3, 0, 3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaB1" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 5.5, 0, -3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaB2" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 7.9, 0, -3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaB3" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 10.3, 0, -3.6)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaE1" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0, 0, -0.15, 0, 0.15, 0, 0.15, 0, 0, 11.5, 0, -2.4)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaE2" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0, 0, -0.15, 0, 0.15, 0, 0.15, 0, 0, 11.5, 0, 0)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
+
+[node name="CercaE3" type="MeshInstance3D" parent="Granja/Corral"]
+transform = Transform3D(0, 0, -0.15, 0, 0.15, 0, 0.15, 0, 0, 11.5, 0, 2.4)
+mesh = ExtResource("16_cerca")
+script = ExtResource("17_coltri")
 
 [node name="Atmosfera" type="Node3D" parent="."]
 
