@@ -1,13 +1,13 @@
-[gd_scene load_steps=34 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=37 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="2_esp"]
 [ext_resource type="Shader" path="res://escenas/mundo/suelo.gdshader" id="3_suelo"]
 [ext_resource type="ArrayMesh" path="res://assets/models/arbol_saman.obj" id="4_saman"]
 [ext_resource type="ArrayMesh" path="res://assets/models/arbol_araguaney.obj" id="5_arag"]
-[ext_resource type="ArrayMesh" path="res://assets/models/arbusto.obj" id="6_arbusto"]
-[ext_resource type="ArrayMesh" path="res://assets/models/mata_grama.obj" id="7_grama"]
-[ext_resource type="ArrayMesh" path="res://assets/models/montana.obj" id="8_montana"]
+[ext_resource type="ArrayMesh" path="res://assets/models/arbusto_v2.obj" id="6_arbusto"]
+[ext_resource type="ArrayMesh" path="res://assets/models/grama_alta.obj" id="7_grama"]
+[ext_resource type="ArrayMesh" path="res://assets/models/colina.obj" id="8_colina"]
 [ext_resource type="ArrayMesh" path="res://assets/models/vaca.obj" id="9_vaca"]
 [ext_resource type="ArrayMesh" path="res://assets/models/toro.obj" id="10_toro"]
 [ext_resource type="ArrayMesh" path="res://assets/models/caballo.obj" id="11_caballo"]
@@ -17,12 +17,15 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/granero.obj" id="15_granero"]
 [ext_resource type="ArrayMesh" path="res://assets/models/cerca.obj" id="16_cerca"]
 [ext_resource type="Script" path="res://escenas/mundo/ColisionTrimesh.gd" id="17_coltri"]
+[ext_resource type="ArrayMesh" path="res://assets/models/grama_seca.obj" id="18_seca"]
+[ext_resource type="ArrayMesh" path="res://assets/models/nube.obj" id="19_nube"]
+[ext_resource type="Script" path="res://escenas/mundo/NubesDinamicas.gd" id="20_nubes"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
-sky_top_color = Color(0.36, 0.56, 0.8, 1)
-sky_horizon_color = Color(0.82, 0.86, 0.82, 1)
-ground_bottom_color = Color(0.55, 0.62, 0.5, 1)
-ground_horizon_color = Color(0.82, 0.86, 0.82, 1)
+sky_top_color = Color(0.28, 0.50, 0.80, 1)
+sky_horizon_color = Color(0.75, 0.82, 0.90, 1)
+ground_bottom_color = Color(0.45, 0.55, 0.42, 1)
+ground_horizon_color = Color(0.75, 0.82, 0.90, 1)
 
 [sub_resource type="Sky" id="Sky_1"]
 sky_material = SubResource("Sky_mat")
@@ -31,13 +34,13 @@ sky_material = SubResource("Sky_mat")
 background_mode = 2
 sky = SubResource("Sky_1")
 ambient_light_source = 3
-ambient_light_energy = 0.6
+ambient_light_energy = 0.55
 tonemap_mode = 2
-tonemap_exposure = 1.0
+tonemap_exposure = 1.05
 fog_enabled = true
-fog_light_color = Color(0.76, 0.82, 0.88, 1)
-fog_density = 0.0011
-fog_aerial_perspective = 0.6
+fog_light_color = Color(0.72, 0.80, 0.88, 1)
+fog_density = 0.0008
+fog_aerial_perspective = 0.5
 
 [sub_resource type="ShaderMaterial" id="Mat_suelo"]
 shader = ExtResource("3_suelo")
@@ -61,18 +64,13 @@ mesh = ExtResource("5_arag")
 transform_format = 1
 mesh = ExtResource("6_arbusto")
 
-[sub_resource type="MultiMesh" id="MM_maleza"]
+[sub_resource type="MultiMesh" id="MM_grama"]
 transform_format = 1
 mesh = ExtResource("7_grama")
 
-[sub_resource type="MultiMesh" id="MM_malezaseca"]
+[sub_resource type="MultiMesh" id="MM_seca"]
 transform_format = 1
-mesh = ExtResource("7_grama")
-
-[sub_resource type="StandardMaterial3D" id="Mat_seca"]
-albedo_color = Color(0.8, 0.73, 0.36, 1)
-metallic = 0.0
-roughness = 1.0
+mesh = ExtResource("18_seca")
 
 [sub_resource type="StandardMaterial3D" id="Mat_luc"]
 shading_mode = 0
@@ -90,6 +88,12 @@ size = Vector3(320, 50, 4)
 
 [sub_resource type="BoxShape3D" id="Shape_muro_ew"]
 size = Vector3(4, 50, 320)
+
+[sub_resource type="Curve3D" id="Curve_camino"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 118, 0, 0, 0, 18, 0, 0, 18, 0, 85, 0, 0, 0, -22, 0, 0, -22, 0, 52, 0, 0, 0, 16, 0, 0, 16, 0, 18, 0, 0, 0, -14, 0, 0, -14, 0, -16, 0, 0, 0, 10, 0, 0, 10, 0, -52, 0, 0, 0, -8, 0, 0, -8, 0, -88, 0, 0, 0, 0, 0, 0, 0, 0, -120),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+}
 
 [node name="Main" type="Node3D"]
 
@@ -133,133 +137,163 @@ shape = SubResource("Shape_muro_ew")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 25, 0)
 shape = SubResource("Shape_muro_ew")
 
-[node name="Montanas" type="Node3D" parent="."]
+[node name="CaminoOrganico" type="Path3D" parent="."]
+curve = SubResource("Curve_camino")
 
-[node name="M1" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 175, 0, 0)
-mesh = ExtResource("8_montana")
+[node name="Colinas" type="Node3D" parent="."]
 
-[node name="M2" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, 5.5, 0, 5.5, 0, -5.5, 0, 0, 152, 0, -88)
-mesh = ExtResource("8_montana")
+[node name="C1" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 170, 0, 10)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M3" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(-5, 0, 0, 0, 5, 0, 0, 0, -5, 88, 0, -152)
-mesh = ExtResource("8_montana")
+[node name="C2" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(-2.0, 0, 0, 0, 2.0, 0, 0, 0, -2.0, 140, 0, -90)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M4" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, -6, 0, 6, 0, 6, 0, 0, 0, 0, -175)
-mesh = ExtResource("8_montana")
+[node name="C3" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 88, 0, -155)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M5" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(5.5, 0, 0, 0, 5.5, 0, 0, 0, 5.5, -88, 0, -152)
-mesh = ExtResource("8_montana")
+[node name="C4" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, -2.2, 0, 2.2, 0, 2.2, 0, 0, -10, 0, -175)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M6" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, 5, 0, 5, 0, -5, 0, 0, -152, 0, -88)
-mesh = ExtResource("8_montana")
+[node name="C5" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(2.1, 0, 0, 0, 2.1, 0, 0, 0, 2.1, -90, 0, -148)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M7" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(-6, 0, 0, 0, 6, 0, 0, 0, -6, -175, 0, 0)
-mesh = ExtResource("8_montana")
+[node name="C6" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, 2.0, 0, 2.0, 0, -2.0, 0, 0, -155, 0, -80)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M8" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, -5.5, 0, 5.5, 0, 5.5, 0, 0, -152, 0, 88)
-mesh = ExtResource("8_montana")
+[node name="C7" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(-2.3, 0, 0, 0, 2.3, 0, 0, 0, -2.3, -172, 0, 0)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M9" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -88, 0, 152)
-mesh = ExtResource("8_montana")
+[node name="C8" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, -2.1, 0, 2.1, 0, 2.1, 0, 0, -150, 0, 90)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M10" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, 6, 0, 6, 0, -6, 0, 0, 0, 0, 175)
-mesh = ExtResource("8_montana")
+[node name="C9" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -88, 0, 155)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M11" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(-5.5, 0, 0, 0, 5.5, 0, 0, 0, -5.5, 88, 0, 152)
-mesh = ExtResource("8_montana")
+[node name="C10" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, 0, 0, 175)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
-[node name="M12" type="MeshInstance3D" parent="Montanas"]
-transform = Transform3D(0, 0, -5, 0, 5, 0, 5, 0, 0, 152, 0, 88)
-mesh = ExtResource("8_montana")
+[node name="C11" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, 0, 0, -2.2, 90, 0, 150)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
+
+[node name="C12" type="MeshInstance3D" parent="Colinas"]
+transform = Transform3D(0, 0, -2.0, 0, 2.0, 0, 2.0, 0, 0, 155, 0, 80)
+mesh = ExtResource("8_colina")
+cast_shadow = 0
 
 [node name="Flora" type="Node3D" parent="."]
 
 [node name="MMI_Saman" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_saman")
 script = ExtResource("2_esp")
-cantidad = 38
-area = Vector2(250, 250)
-escala_min = 1.6
-escala_max = 2.5
+cantidad = 32
+area = Vector2(240, 240)
+escala_min = 1.8
+escala_max = 2.8
 semilla = 1337
-radio_excluido = 16.0
+distancia_min = 14.0
+radio_excluido = 18.0
+camino = NodePath("../../CaminoOrganico")
+radio_camino = 10.0
 
 [node name="MMI_Araguaney" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arag")
 script = ExtResource("2_esp")
-cantidad = 26
-area = Vector2(250, 250)
-escala_min = 1.4
-escala_max = 2.1
+cantidad = 22
+area = Vector2(240, 240)
+escala_min = 1.5
+escala_max = 2.2
 semilla = 7
+distancia_min = 12.0
 radio_excluido = 20.0
+camino = NodePath("../../CaminoOrganico")
+radio_camino = 10.0
 
 [node name="MMI_Arbustos" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arbusto")
 script = ExtResource("2_esp")
-cantidad = 130
-area = Vector2(250, 250)
-escala_min = 0.8
-escala_max = 1.6
+cantidad = 120
+area = Vector2(240, 240)
+escala_min = 0.6
+escala_max = 1.4
 semilla = 42
-radio_excluido = 5.0
+distancia_min = 3.5
+radio_excluido = 8.0
+camino = NodePath("../../CaminoOrganico")
+radio_camino = 7.0
 
-[node name="MMI_Maleza" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_maleza")
+[node name="MMI_GramaAlta" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_grama")
 script = ExtResource("2_esp")
-cantidad = 1400
-area = Vector2(250, 250)
-escala_min = 0.7
-escala_max = 1.7
+cantidad = 500
+area = Vector2(240, 240)
+escala_min = 0.6
+escala_max = 1.2
 semilla = 99
-radio_excluido = 2.5
+distancia_min = 1.5
+radio_excluido = 4.0
+camino = NodePath("../../CaminoOrganico")
+radio_camino = 5.0
 
-[node name="MMI_MalezaSeca" type="MultiMeshInstance3D" parent="Flora"]
-multimesh = SubResource("MM_malezaseca")
-material_override = SubResource("Mat_seca")
+[node name="MMI_GramaSeca" type="MultiMeshInstance3D" parent="Flora"]
+multimesh = SubResource("MM_seca")
 script = ExtResource("2_esp")
-cantidad = 800
-area = Vector2(250, 250)
-escala_min = 0.7
-escala_max = 1.8
+cantidad = 400
+area = Vector2(240, 240)
+escala_min = 0.5
+escala_max = 1.1
 semilla = 314
-radio_excluido = 2.5
+distancia_min = 1.2
+radio_excluido = 3.5
+camino = NodePath("../../CaminoOrganico")
+radio_camino = 5.0
 
-[node name="Corral" type="Node3D" parent="."]
+[node name="Animales" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -105)
 
-[node name="Vaca" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(0.75, 0, 1.3, 0, 1.5, 0, -1.3, 0, 0.75, 10, 0, 6)
+[node name="Vaca" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(0.065, 0, 0.075, 0, 0.1, 0, -0.075, 0, 0.065, 10, 0, 6)
 mesh = ExtResource("9_vaca")
 
-[node name="Toro" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(-0.51, 0, 1.41, 0, 1.5, 0, -1.41, 0, -0.51, 15, 0, -4)
+[node name="Toro" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(-0.055, 0, 0.085, 0, 0.1, 0, -0.085, 0, -0.055, 15, 0, -4)
 mesh = ExtResource("10_toro")
 
-[node name="Caballo" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(0, 0, -1.5, 0, 1.5, 0, 1.5, 0, 0, -12, 0, 2)
+[node name="Caballo" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(0, 0, -0.09, 0, 0.1, 0, 0.09, 0, 0, -12, 0, 2)
 mesh = ExtResource("11_caballo")
 
-[node name="Cerdo" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(1.06, 0, 1.06, 0, 1.5, 0, -1.06, 0, 1.06, 8, 0, -12)
+[node name="Cerdo" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(0.07, 0, 0.07, 0, 0.08, 0, -0.07, 0, 0.07, 8, 0, -12)
 mesh = ExtResource("12_cerdo")
 
-[node name="Gallina" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -8, 0, 9)
+[node name="Gallina" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(0.06, 0, 0, 0, 0.06, 0, 0, 0, 0.06, -8, 0, 9)
 mesh = ExtResource("13_gallina")
 
-[node name="Gallo" type="MeshInstance3D" parent="Corral"]
-transform = Transform3D(1.3, 0, -0.75, 0, 1.5, 0, 0.75, 0, 1.3, -6, 0, 7)
+[node name="Gallo" type="MeshInstance3D" parent="Animales"]
+transform = Transform3D(0.065, 0, -0.04, 0, 0.065, 0, 0.04, 0, 0.065, -6, 0, 7)
 mesh = ExtResource("14_gallo")
 
 [node name="Granja" type="Node3D" parent="."]
@@ -331,6 +365,16 @@ initial_velocity_min = 0.1
 initial_velocity_max = 0.5
 damping_min = 0.2
 damping_max = 0.6
+
+[node name="Nubes" type="Node3D" parent="Atmosfera"]
+script = ExtResource("20_nubes")
+malla_nube = ExtResource("19_nube")
+cantidad = 18
+escala_min = 1.5
+escala_max = 3.5
+velocidad = Vector2(2.5, 0.4)
+altura_min = 55.0
+altura_max = 78.0
 
 [node name="PuntoSpawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 120)

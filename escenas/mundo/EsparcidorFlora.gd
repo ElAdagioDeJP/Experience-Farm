@@ -1,71 +1,96 @@
 extends MultiMeshInstance3D
-## Esparce N instancias de una malla (tronco/copa/maleza) sobre la sabana en una
-## sola draw call. Distribución procedural con semilla fija (reproducible) + jitter
-## de rotación y escala. Para un árbol "tronco + copa" usa DOS nodos con la MISMA
-## semilla/area/cantidad/radio_excluido (quedan alineados) y distinto altura_offset.
+## Esparce instancias con Poisson Disk Sampling: garantiza distancia minima
+## entre ejemplares, evita solapamiento visual de arboles/arbustos.
+## Ademas respeta una zona de exclusion a lo largo de un Path3D (camino organico).
+##
+## Para un arbol "tronco + copa" usa DOS nodos hermanos con la MISMA semilla/
+## area/distancia_min/exclusion (quedan alineados) y distinto altura_offset.
 
-@export var cantidad: int = 300
-@export var area: Vector2 = Vector2(120, 120)   # extensión X/Z en metros
+@export var cantidad: int = 80
+@export var area: Vector2 = Vector2(240, 240)   # X/Z en metros
 @export var escala_min: float = 0.9
 @export var escala_max: float = 1.3
 @export var semilla: int = 1337
-## Radio libre alrededor del origen (deja despejado el sendero/spawn).
-@export var radio_excluido: float = 6.0
-## Altura (Y) a la que se centra cada instancia. Sube la copa sobre el tronco.
+@export var distancia_min: float = 4.0          # Poisson: separacion minima entre instancias
+@export var radio_excluido: float = 8.0         # radio libre alrededor del origen (spawn)
+## Path3D opcional: ninguna instancia se coloca a menos de radio_camino metros del camino.
+@export var camino: NodePath
+@export var radio_camino: float = 6.0
+## Desplazamiento vertical para alinear copa sobre tronco.
 @export var altura_offset: float = 0.0
-## Opcional: extrae la malla del primer MeshInstance3D de esta escena (.glb) y la
-## usa en el MultiMesh. Util para reusar assets .glb (pasto) sin .tres aparte.
-@export var malla_desde_escena: PackedScene
+
+var _puntos_camino: PackedVector2Array = []     # XZ precalculado del camino
 
 
 func _ready() -> void:
 	if multimesh == null:
-		push_warning("EsparcidorFlora: falta el recurso MultiMesh en %s" % name)
+		push_warning("EsparcidorFlora: falta MultiMesh en %s" % name)
 		return
-	if malla_desde_escena:
-		var m := _extraer_malla(malla_desde_escena)
-		if m:
-			multimesh.mesh = m
 	if multimesh.mesh == null:
 		push_warning("EsparcidorFlora: MultiMesh sin malla en %s" % name)
 		return
-	_poblar()
+
+	# Precalcular puntos del camino en XZ para chequeo de proximidad.
+	if camino and not camino.is_empty():
+		var nodo_camino: Node = get_node_or_null(camino)
+		if nodo_camino is Path3D and (nodo_camino as Path3D).curve:
+			var curve: Curve3D = (nodo_camino as Path3D).curve
+			var n: int = 120
+			for i in range(n + 1):
+				var t: float = curve.get_baked_length() * i / float(n)
+				var p: Vector3 = curve.sample_baked(t)
+				_puntos_camino.append(Vector2(p.x, p.z))
+
+	_poblar_poisson()
 
 
-func _extraer_malla(escena: PackedScene) -> Mesh:
-	var inst := escena.instantiate()
-	var malla: Mesh = null
-	var pila: Array = [inst]
-	while pila and malla == null:
-		var n = pila.pop_back()
-		if n is MeshInstance3D and n.mesh:
-			malla = n.mesh
-		for h in n.get_children():
-			pila.append(h)
-	inst.free()
-	return malla
+func _cerca_del_camino(xz: Vector2) -> bool:
+	for p in _puntos_camino:
+		if xz.distance_to(p) < radio_camino:
+			return true
+	return false
 
 
-func _poblar() -> void:
+func _poblar_poisson() -> void:
+	## Poisson Disk Sampling simplificado (dart throwing con rechazo):
+	## - Lanza un candidato aleatorio.
+	## - Acepta si esta a >= distancia_min de todos los aceptados.
+	## - Itera hasta cantidad aceptados o max_intentos.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = semilla
 
+	var aceptados: PackedVector2Array = []
+	var max_intentos := cantidad * 40
+	var intentos := 0
+
+	while aceptados.size() < cantidad and intentos < max_intentos:
+		intentos += 1
+		var px := rng.randf_range(-area.x * 0.5, area.x * 0.5)
+		var pz := rng.randf_range(-area.y * 0.5, area.y * 0.5)
+		var xz := Vector2(px, pz)
+
+		# Zona excluida alrededor del spawn/origen.
+		if xz.length() < radio_excluido:
+			continue
+		# Zona excluida del camino organico.
+		if _cerca_del_camino(xz):
+			continue
+		# Chequeo Poisson: distancia minima respecto a todos los aceptados.
+		var valido := true
+		for a in aceptados:
+			if xz.distance_to(a) < distancia_min:
+				valido = false
+				break
+		if valido:
+			aceptados.append(xz)
+
+	# Colocar instancias en el MultiMesh.
+	var n_real := aceptados.size()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.instance_count = cantidad
+	multimesh.instance_count = n_real
 
-	for i in cantidad:
-		var pos := Vector3(
-			rng.randf_range(-area.x * 0.5, area.x * 0.5),
-			altura_offset,
-			rng.randf_range(-area.y * 0.5, area.y * 0.5)
-		)
-		# Reintenta si cae dentro del radio despejado (sendero/spawn).
-		var intentos := 0
-		while Vector2(pos.x, pos.z).length() < radio_excluido and intentos < 8:
-			pos.x = rng.randf_range(-area.x * 0.5, area.x * 0.5)
-			pos.z = rng.randf_range(-area.y * 0.5, area.y * 0.5)
-			intentos += 1
-
+	for i in n_real:
+		var pos := Vector3(aceptados[i].x, altura_offset, aceptados[i].y)
 		var t := Transform3D(Basis(), pos)
 		t = t.rotated_local(Vector3.UP, rng.randf_range(0.0, TAU))
 		t = t.scaled_local(Vector3.ONE * rng.randf_range(escala_min, escala_max))
