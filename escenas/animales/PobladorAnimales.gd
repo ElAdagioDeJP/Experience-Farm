@@ -27,8 +27,10 @@ func _ready() -> void:
 			ocupados.append(Vector2(bb.global_position.x, bb.global_position.z))
 
 	for b in bases:
+		var ai_base: AnimalIA = b as AnimalIA
+		var orden_variantes: Array[int] = _orden_variantes_para_animal(rng, ai_base)
 		if b.has_method("set"):
-			b.set("variante", int(rng.randi() % 4))
+			b.set("variante", orden_variantes[0])
 		for i in range(duplicados_por_base):
 			var copia: Node = b.duplicate(Node.DUPLICATE_SIGNALS | Node.DUPLICATE_GROUPS | Node.DUPLICATE_SCRIPTS)
 			if copia == null:
@@ -41,7 +43,8 @@ func _ready() -> void:
 			ocupados.append(p)
 			c3d.global_position = Vector3(p.x, 0.0, p.y)
 			c3d.rotation.y = rng.randf_range(0.0, TAU)
-			copia.set("variante", int(rng.randi() % 4))
+			var idx_variante: int = (i + 1) % 4
+			copia.set("variante", orden_variantes[idx_variante])
 			add_child(copia)
 
 
@@ -67,3 +70,47 @@ func _buscar_posicion(rng: RandomNumberGenerator, ocupados: Array[Vector2]) -> V
 		rng.randf_range(-area_spawn.x * 0.5, area_spawn.x * 0.5),
 		rng.randf_range(-area_spawn.y * 0.5, area_spawn.y * 0.5)
 	)
+
+
+func _orden_variantes(rng: RandomNumberGenerator) -> Array[int]:
+	var orden: Array[int] = [0, 1, 2, 3]
+	for i in range(orden.size() - 1, 0, -1):
+		var j: int = int(rng.randi() % (i + 1))
+		var tmp: int = orden[i]
+		orden[i] = orden[j]
+		orden[j] = tmp
+	return orden
+
+
+func _orden_variantes_para_animal(rng: RandomNumberGenerator, animal: AnimalIA) -> Array[int]:
+	var orden: Array[int] = _orden_variantes(rng)
+	if animal == null:
+		return orden
+
+	match animal.tipo_animal:
+		AnimalIA.TipoAnimal.CABALLO:
+			return _priorizar_variante(orden, 2)
+		AnimalIA.TipoAnimal.POLLITO:
+			return _orden_variantes_pollito(rng)
+
+	return orden
+
+
+func _priorizar_variante(orden: Array[int], objetivo: int) -> Array[int]:
+	var idx: int = orden.find(objetivo)
+	if idx <= 0:
+		return orden
+	var primero: int = orden[0]
+	orden[0] = objetivo
+	orden[idx] = primero
+	return orden
+
+
+func _orden_variantes_pollito(rng: RandomNumberGenerator) -> Array[int]:
+	var opciones: Array[int] = [1, 2]
+	for i in range(opciones.size() - 1, 0, -1):
+		var j: int = int(rng.randi() % (i + 1))
+		var tmp: int = opciones[i]
+		opciones[i] = opciones[j]
+		opciones[j] = tmp
+	return [0, opciones[0], opciones[1], opciones[0]]

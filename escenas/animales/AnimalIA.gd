@@ -54,6 +54,8 @@ var _base_torso_rot: Vector3 = Vector3.ZERO
 var _base_cabeza_rot: Vector3 = Vector3.ZERO
 var _base_cola_rot: Vector3 = Vector3.ZERO
 var _yaw_modelo_offset: float = 0.0
+var _transform_modelo_base: Transform3D = Transform3D.IDENTITY
+var _tamano_malla_base: Vector3 = Vector3.ONE
 
 
 func _ready() -> void:
@@ -170,6 +172,11 @@ func _preparar_esqueleto() -> void:
 		_modelo.owner = owner
 		_modelo.transform = base_transform
 
+	if _modelo is MeshInstance3D:
+		var mi_base: MeshInstance3D = _modelo as MeshInstance3D
+		_transform_modelo_base = mi_base.transform
+		_tamano_malla_base = _tamano_malla(mi_base.mesh)
+
 	_aplicar_malla_variante()
 
 	_base_cadera_pos = _hueso_cadera.position
@@ -273,7 +280,7 @@ func _perfil_animacion() -> Dictionary:
 		TipoAnimal.GALLO:
 			return {"bob": 0.12, "inclinacion": 0.24, "cuello": 0.27, "cola": 0.30, "respira": 0.03}
 		TipoAnimal.POLLITO:
-			return {"bob": 0.14, "inclinacion": 0.29, "cuello": 0.34, "cola": 0.32, "respira": 0.04}
+			return {"bob": 0.08, "inclinacion": 0.18, "cuello": 0.22, "cola": 0.22, "respira": 0.03}
 	return {"bob": 0.07, "inclinacion": 0.12, "cuello": 0.10, "cola": 0.20, "respira": 0.02}
 
 
@@ -302,12 +309,42 @@ func _aplicar_malla_variante() -> void:
 	if not (_modelo is MeshInstance3D):
 		return
 	var mi: MeshInstance3D = _modelo as MeshInstance3D
+	mi.transform = _transform_modelo_base
 	var ruta: String = _ruta_malla_variante()
 	if ruta.is_empty():
 		return
 	var malla: Mesh = load(ruta) as Mesh
 	if malla != null:
 		mi.mesh = malla
+		_normalizar_escala_malla(mi)
+
+
+func _normalizar_escala_malla(mi: MeshInstance3D) -> void:
+	if mi == null or mi.mesh == null:
+		return
+	var tam_base: Vector3 = _tamano_malla_base
+	var tam_variante: Vector3 = _tamano_malla(mi.mesh)
+	var eps: float = 0.0001
+	var ratio_x: float = tam_base.x / max(tam_variante.x, eps)
+	var ratio_y: float = tam_base.y / max(tam_variante.y, eps)
+	var ratio_z: float = tam_base.z / max(tam_variante.z, eps)
+	var factor: float = pow(max(ratio_x * ratio_y * ratio_z, eps), 1.0 / 3.0)
+	var t: Transform3D = _transform_modelo_base
+	t.basis = t.basis.scaled(Vector3.ONE * factor)
+	mi.transform = t
+
+
+func _tamano_malla(malla: Mesh) -> Vector3:
+	if malla == null:
+		return Vector3.ONE
+	var tam: Vector3 = malla.get_aabb().size.abs()
+	if tam.x <= 0.0001:
+		tam.x = 1.0
+	if tam.y <= 0.0001:
+		tam.y = 1.0
+	if tam.z <= 0.0001:
+		tam.z = 1.0
+	return tam
 
 
 func _ruta_malla_variante() -> String:
