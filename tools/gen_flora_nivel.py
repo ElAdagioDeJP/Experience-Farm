@@ -144,29 +144,29 @@ def build_grama_seca():
 
 
 # ============================================================
-#  ARBUSTO V2  (frondoso, organico, ~20x20x18 vox)
-#  Sin tallos negros: tronco corto marron + copa en capas
+#  ARBUSTO V2  (domo esférico denso, sin tronco visible)
+#  Referencia: arbusto frondoso tipo bola desde el suelo.
+#  Radio 8 vox, centro en z=8 → base rasante en z=0.
 # ============================================================
 def build_arbusto_v2():
     g = Grid()
-    cx, cy = 10, 10
-    # Tronco corto
-    g.fill(cx - 1, cx + 1, cy - 1, cy + 1, 0, 4, 8)
-    g.fill(cx, cx, cy, cy, 0, 4, 7)  # veta clara
-
-    # Copa en capas (esfera achatada, radio decreciente con z)
-    radios = [(6, 6), (7, 7), (7, 7), (6, 6), (5, 5), (4, 4), (2, 2)]
-    for iz, (rx, ry) in enumerate(radios):
-        z = 5 + iz
-        for x in range(cx - rx, cx + rx + 1):
-            for y in range(cy - ry, cy + ry + 1):
-                dx, dy = x - cx, y - cy
-                if dx*dx/max(rx*rx, 1) + dy*dy/max(ry*ry, 1) <= 1.0:
-                    # Luz en borde superior, sombra en capas bajas
-                    col = 10 if iz >= 4 else (9 if iz >= 2 else 11)
-                    # pequeña variacion en borde
-                    if abs(dx) == rx or abs(dy) == ry:
-                        col = 9
+    R = 8
+    cx, cy, cz = 9, 9, 8   # centro: base en z=0 (8-R=0)
+    for x in range(cx - R, cx + R + 1):
+        for y in range(cy - R, cy + R + 1):
+            for z in range(0, cz + R + 1):
+                dx, dy, dz = x - cx, y - cy, z - cz
+                dist2 = dx*dx + dy*dy + dz*dz
+                if dist2 <= R * R:
+                    # Color por altura: sombra abajo, verde medio, luz arriba
+                    if dz >= R // 2:
+                        col = 10   # verde claro (copa iluminada)
+                    elif dz >= 0:
+                        col = 9    # verde medio
+                    elif dz >= -(R // 2):
+                        col = 9    # verde medio (hemisferio inferior)
+                    else:
+                        col = 11   # verde oscuro (interior/sombra)
                     g.set(x, y, z, col)
     return g
 

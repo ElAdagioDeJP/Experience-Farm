@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=39 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="2_esp"]
@@ -20,6 +20,8 @@
 [ext_resource type="ArrayMesh" path="res://assets/models/grama_seca.obj" id="18_seca"]
 [ext_resource type="ArrayMesh" path="res://assets/models/nube.obj" id="19_nube"]
 [ext_resource type="Script" path="res://escenas/mundo/NubesDinamicas.gd" id="20_nubes"]
+[ext_resource type="ArrayMesh" path="res://assets/models/tile_tierra.obj" id="21_tierra"]
+[ext_resource type="Script" path="res://escenas/mundo/CaminoRocoso.gd" id="22_camin"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.28, 0.50, 0.80, 1)
@@ -140,65 +142,74 @@ shape = SubResource("Shape_muro_ew")
 [node name="CaminoOrganico" type="Path3D" parent="."]
 curve = SubResource("Curve_camino")
 
+[node name="CaminoRocoso" type="Node3D" parent="."]
+script = ExtResource("22_camin")
+camino = NodePath("../CaminoOrganico")
+malla_tile = ExtResource("21_tierra")
+paso = 1.92
+filas = 2
+escala_xy = 0.12
+escala_y = 0.035
+
 [node name="Colinas" type="Node3D" parent="."]
 
 [node name="C1" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 170, 0, 10)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 230, 0, 0)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C2" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(-2.0, 0, 0, 0, 2.0, 0, 0, 0, -2.0, 140, 0, -90)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 199, 0, 115)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C3" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 88, 0, -155)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 115, 0, 199)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C4" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, -2.2, 0, 2.2, 0, 2.2, 0, 0, -10, 0, -175)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 0, 0, 230)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C5" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(2.1, 0, 0, 0, 2.1, 0, 0, 0, 2.1, -90, 0, -148)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -115, 0, 199)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C6" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, 2.0, 0, 2.0, 0, -2.0, 0, 0, -155, 0, -80)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -199, 0, 115)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C7" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(-2.3, 0, 0, 0, 2.3, 0, 0, 0, -2.3, -172, 0, 0)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -230, 0, 0)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C8" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, -2.1, 0, 2.1, 0, 2.1, 0, 0, -150, 0, 90)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -199, 0, -115)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C9" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -88, 0, 155)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -115, 0, -199)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C10" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, 0, 0, 175)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 0, 0, -230)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C11" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, 0, 0, -2.2, 90, 0, 150)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 115, 0, -199)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
 [node name="C12" type="MeshInstance3D" parent="Colinas"]
-transform = Transform3D(0, 0, -2.0, 0, 2.0, 0, 2.0, 0, 0, 155, 0, 80)
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 199, 0, -115)
 mesh = ExtResource("8_colina")
 cast_shadow = 0
 
@@ -246,12 +257,12 @@ radio_camino = 7.0
 [node name="MMI_GramaAlta" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_grama")
 script = ExtResource("2_esp")
-cantidad = 500
+cantidad = 1500
 area = Vector2(240, 240)
 escala_min = 0.07
 escala_max = 0.15
 semilla = 99
-distancia_min = 1.5
+distancia_min = 0.8
 radio_excluido = 4.0
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 5.0
@@ -259,12 +270,12 @@ radio_camino = 5.0
 [node name="MMI_GramaSeca" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_seca")
 script = ExtResource("2_esp")
-cantidad = 400
+cantidad = 1100
 area = Vector2(240, 240)
 escala_min = 0.05
 escala_max = 0.12
 semilla = 314
-distancia_min = 1.2
+distancia_min = 0.8
 radio_excluido = 3.5
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 5.0
