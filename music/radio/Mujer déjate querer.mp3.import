@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dir560kpx75qa"
+path="res://.godot/imported/Mujer déjate querer.mp3-c3e628d0782d1e72200d5a678bc633f9.mp3str"
+
+[deps]
+
+source_file="res://music/radio/Mujer déjate querer.mp3"
+dest_files=["res://.godot/imported/Mujer déjate querer.mp3-c3e628d0782d1e72200d5a678bc633f9.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

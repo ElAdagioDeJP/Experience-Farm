@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cdwa08yavloec"
+path="res://.godot/imported/letrero_cultivo.obj-c6863acb1381de68e68a3b3c9bb042de.mesh"
+
+[deps]
+
+files=["res://.godot/imported/letrero_cultivo.obj-c6863acb1381de68e68a3b3c9bb042de.mesh"]
+
+source_file="res://assets/models/letrero_cultivo.obj"
+dest_files=["res://.godot/imported/letrero_cultivo.obj-c6863acb1381de68e68a3b3c9bb042de.mesh", "res://.godot/imported/letrero_cultivo.obj-c6863acb1381de68e68a3b3c9bb042de.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

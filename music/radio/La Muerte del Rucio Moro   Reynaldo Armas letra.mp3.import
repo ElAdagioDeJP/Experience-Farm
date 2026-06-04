@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://vkn7yuj2f4op"
+path="res://.godot/imported/La Muerte del Rucio Moro   Reynaldo Armas letra.mp3-fc9a3cf8be8f13c5abfb3e84934adf3e.mp3str"
+
+[deps]
+
+source_file="res://music/radio/La Muerte del Rucio Moro   Reynaldo Armas letra.mp3"
+dest_files=["res://.godot/imported/La Muerte del Rucio Moro   Reynaldo Armas letra.mp3-fc9a3cf8be8f13c5abfb3e84934adf3e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

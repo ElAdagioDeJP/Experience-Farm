@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://xsokvhys83s2"
+path="res://.godot/imported/jugador_walk_f2.obj-6d842da5f39fbcf30da5256a16b03bfe.mesh"
+
+[deps]
+
+files=["res://.godot/imported/jugador_walk_f2.obj-6d842da5f39fbcf30da5256a16b03bfe.mesh"]
+
+source_file="res://assets/models/jugador_walk_f2.obj"
+dest_files=["res://.godot/imported/jugador_walk_f2.obj-6d842da5f39fbcf30da5256a16b03bfe.mesh", "res://.godot/imported/jugador_walk_f2.obj-6d842da5f39fbcf30da5256a16b03bfe.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

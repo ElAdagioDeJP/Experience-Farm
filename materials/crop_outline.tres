@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://escenas/mundo/crop_outline.gdshader" id="1_ol"]
+
+[resource]
+shader = ExtResource("1_ol")
+shader_parameter/outline_width = 0.0
+shader_parameter/outline_color = Color(1, 0.84, 0, 1)

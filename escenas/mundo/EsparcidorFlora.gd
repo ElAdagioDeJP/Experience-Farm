@@ -18,6 +18,9 @@ extends MultiMeshInstance3D
 @export var radio_camino: float = 6.0
 ## Desplazamiento vertical para alinear copa sobre tronco.
 @export var altura_offset: float = 0.0
+## Zona rectangular opcional donde no se instancia flora (centro y tamano en XZ global).
+@export var zona_exclusion_centro: Vector2 = Vector2.ZERO
+@export var zona_exclusion_tamano: Vector2 = Vector2.ZERO
 
 var _puntos_camino: PackedVector2Array = []     # XZ precalculado del camino
 
@@ -51,6 +54,18 @@ func _cerca_del_camino(xz: Vector2) -> bool:
 	return false
 
 
+func _en_rect_exclusion(xz: Vector2) -> bool:
+	if zona_exclusion_tamano.x <= 0.0 or zona_exclusion_tamano.y <= 0.0:
+		return false
+	var mitad := zona_exclusion_tamano * 0.5
+	return (
+		xz.x >= zona_exclusion_centro.x - mitad.x
+		and xz.x <= zona_exclusion_centro.x + mitad.x
+		and xz.y >= zona_exclusion_centro.y - mitad.y
+		and xz.y <= zona_exclusion_centro.y + mitad.y
+	)
+
+
 func _poblar_poisson() -> void:
 	## Cuando distancia_min <= 0, usa scatter aleatorio puro (O(n)) — necesario
 	## para cantidades altas (>5000) donde Poisson O(n²) cuelga el juego.
@@ -73,6 +88,8 @@ func _poblar_poisson() -> void:
 				continue
 			if _cerca_del_camino(xz):
 				continue
+			if _en_rect_exclusion(xz):
+				continue
 			aceptados.append(xz)
 	else:
 		var max_intentos := cantidad * 40
@@ -85,6 +102,8 @@ func _poblar_poisson() -> void:
 			if xz.length() < radio_excluido:
 				continue
 			if _cerca_del_camino(xz):
+				continue
+			if _en_rect_exclusion(xz):
 				continue
 			var valido := true
 			for a in aceptados:

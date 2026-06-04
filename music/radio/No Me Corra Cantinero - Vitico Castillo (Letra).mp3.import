@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dgf1rpc2gsu03"
+path="res://.godot/imported/No Me Corra Cantinero - Vitico Castillo (Letra).mp3-ce1272cecb99030cefa096e4aff22f5f.mp3str"
+
+[deps]
+
+source_file="res://music/radio/No Me Corra Cantinero - Vitico Castillo (Letra).mp3"
+dest_files=["res://.godot/imported/No Me Corra Cantinero - Vitico Castillo (Letra).mp3-ce1272cecb99030cefa096e4aff22f5f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -14,10 +14,12 @@ extends CharacterBody3D
 
 # Pivote que rota SOLO en X (cabeceo). La rotación horizontal (yaw) se aplica al cuerpo.
 @onready var pivote_camara: Node3D = $PivoteCamara
+@onready var camara: Camera3D = $PivoteCamara/Camara
 
 
 func _ready() -> void:
 	add_to_group("jugador")
+	add_to_group("player")
 	# Capturar y ocultar el cursor al iniciar la escena: el mouse pasa a controlar la cámara.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
@@ -38,7 +40,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	# Re-capturar al hacer clic dentro de la ventana.
 	elif event is InputEventMouseButton and event.pressed:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event.button_index == MOUSE_BUTTON_LEFT:
+			_intentar_interactuar_cultivo()
+		elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _physics_process(delta: float) -> void:
@@ -64,3 +69,21 @@ func _physics_process(delta: float) -> void:
 
 	# Mueve y resuelve colisiones contra suelo, cercas y árboles (StaticBody3D del GridMap/escenas).
 	move_and_slide()
+
+
+func _intentar_interactuar_cultivo() -> void:
+	if camara == null:
+		return
+	var centro := get_viewport().get_visible_rect().size * 0.5
+	var origen := camara.project_ray_origin(centro)
+	var fin := origen + camara.project_ray_normal(centro) * 12.0
+	var query := PhysicsRayQueryParameters3D.create(origen, fin)
+	query.collision_mask = 1
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	var hit: Dictionary = get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var collider: Object = hit.get("collider") as Object
+	if collider and collider.has_method("abrir_modal_desde_jugador"):
+		collider.abrir_modal_desde_jugador()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://dmainfarm00001"]
+[gd_scene load_steps=56 format=3 uid="uid://dmainfarm00001"]
 
 [ext_resource type="PackedScene" path="res://escenas/jugador/Jugador.tscn" id="1_jug"]
 [ext_resource type="Script" path="res://escenas/mundo/EsparcidorFlora.gd" id="2_esp"]
@@ -26,7 +26,11 @@
 [ext_resource type="Script" path="res://escenas/animales/AnimalIA.gd" id="24_animal"]
 [ext_resource type="AudioStream" path="res://music/Musica_Bosque.mp3" id="25_music"]
 [ext_resource type="Script" path="res://escenas/animales/PobladorAnimales.gd" id="26_pob"]
-[ext_resource type="ArrayMesh" path="res://assets/models/variantes/pollito_v1.obj" id="27_poll"]
+[ext_resource type="ArrayMesh" path="res://assets/models/pollito_v1.obj" id="27_poll"]
+[ext_resource type="Script" path="res://escenas/mundo/ConstructorCultivos.gd" id="28_cult"]
+[ext_resource type="PackedScene" path="res://escenas/ui/GameUI.tscn" id="29_ui"]
+[ext_resource type="Script" path="res://escenas/mundo/RadioController.gd" id="30_radio"]
+[ext_resource type="ArrayMesh" path="res://assets/models/radio.obj" id="31_radio_mesh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
 sky_top_color = Color(0.40, 0.55, 0.70, 1)
@@ -246,26 +250,30 @@ multimesh = SubResource("MM_saman")
 script = ExtResource("2_esp")
 cantidad = 35
 area = Vector2(320, 320)
-escala_min = 1.8
-escala_max = 2.8
+escala_min = 0.18
+escala_max = 0.28
 semilla = 1337
 distancia_min = 14.0
 radio_excluido = 18.0
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 10.0
+zona_exclusion_centro = Vector2(-28, 84)
+zona_exclusion_tamano = Vector2(58, 72)
 
 [node name="MMI_Araguaney" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arag")
 script = ExtResource("2_esp")
 cantidad = 25
 area = Vector2(320, 320)
-escala_min = 1.5
-escala_max = 2.2
+escala_min = 0.15
+escala_max = 0.22
 semilla = 7
 distancia_min = 12.0
 radio_excluido = 20.0
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 10.0
+zona_exclusion_centro = Vector2(-28, 84)
+zona_exclusion_tamano = Vector2(58, 72)
 
 [node name="MMI_Arbustos" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_arbusto")
@@ -281,6 +289,8 @@ distancia_min = 3.5
 radio_excluido = 8.0
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 7.0
+zona_exclusion_centro = Vector2(-28, 84)
+zona_exclusion_tamano = Vector2(58, 72)
 
 [node name="MMI_GramaAlta" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_grama")
@@ -295,6 +305,8 @@ distancia_min = 0.0
 radio_excluido = 4.0
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 5.0
+zona_exclusion_centro = Vector2(-28, 84)
+zona_exclusion_tamano = Vector2(58, 72)
 
 [node name="MMI_GramaSeca" type="MultiMeshInstance3D" parent="Flora"]
 multimesh = SubResource("MM_seca")
@@ -309,6 +321,8 @@ distancia_min = 0.0
 radio_excluido = 3.5
 camino = NodePath("../../CaminoOrganico")
 radio_camino = 5.0
+zona_exclusion_centro = Vector2(-28, 84)
+zona_exclusion_tamano = Vector2(58, 72)
 
 [node name="Animales" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 90)
@@ -335,7 +349,7 @@ shape = SubResource("Shape_animal_grande")
 [node name="Esqueleto" type="Node3D" parent="Animales/Vaca"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Vaca/Esqueleto"]
-transform = Transform3D(0.552, 0, 0.552, 0, 0.78, 0, -0.552, 0, 0.552, 0, 0, 0)
+transform = Transform3D(0.0552, 0, 0.0552, 0, 0.078, 0, -0.0552, 0, 0.0552, 0, 0, 0)
 mesh = ExtResource("9_vaca")
 
 [node name="Toro" type="CharacterBody3D" parent="Animales"]
@@ -357,7 +371,7 @@ shape = SubResource("Shape_animal_grande")
 [node name="Esqueleto" type="Node3D" parent="Animales/Toro"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Toro/Esqueleto"]
-transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
+transform = Transform3D(0.09, 0, 0, 0, 0.09, 0, 0, 0, 0.09, 0, 0, 0)
 mesh = ExtResource("10_toro")
 
 [node name="Caballo" type="CharacterBody3D" parent="Animales"]
@@ -367,7 +381,7 @@ collision_layer = 1
 collision_mask = 1
 script = ExtResource("24_animal")
 tipo_animal = 2
-variante = 2
+variante = 0
 usar_offset_yaw_manual = true
 yaw_modelo_grados = 180.0
 velocidad_caminar = 1.45
@@ -381,7 +395,7 @@ shape = SubResource("Shape_animal_grande")
 [node name="Esqueleto" type="Node3D" parent="Animales/Caballo"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Caballo/Esqueleto"]
-transform = Transform3D(0, 0, -0.9, 0, 0.9, 0, 0.9, 0, 0, 0, 0, 0)
+transform = Transform3D(0, 0, -0.09, 0, 0.09, 0, 0.09, 0, 0, 0, 0, 0)
 mesh = ExtResource("11_caballo")
 
 [node name="Cerdo" type="CharacterBody3D" parent="Animales"]
@@ -404,7 +418,7 @@ shape = SubResource("Shape_animal_grande")
 [node name="Esqueleto" type="Node3D" parent="Animales/Cerdo"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Cerdo/Esqueleto"]
-transform = Transform3D(0.69, 0, 0, 0, 0.69, 0, 0, 0, 0.69, 0, 0, 0)
+transform = Transform3D(0.069, 0, 0, 0, 0.069, 0, 0, 0, 0.069, 0, 0, 0)
 mesh = ExtResource("12_cerdo")
 
 [node name="Gallina" type="CharacterBody3D" parent="Animales"]
@@ -426,7 +440,7 @@ shape = SubResource("Shape_animal_pequeno")
 [node name="Esqueleto" type="Node3D" parent="Animales/Gallina"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Gallina/Esqueleto"]
-transform = Transform3D(0.66, 0, 0, 0, 0.66, 0, 0, 0, 0.66, 0, 0, 0)
+transform = Transform3D(0.066, 0, 0, 0, 0.066, 0, 0, 0, 0.066, 0, 0, 0)
 mesh = ExtResource("13_gallina")
 
 [node name="Gallo" type="CharacterBody3D" parent="Animales"]
@@ -448,7 +462,7 @@ shape = SubResource("Shape_animal_pequeno")
 [node name="Esqueleto" type="Node3D" parent="Animales/Gallo"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Gallo/Esqueleto"]
-transform = Transform3D(0.72, 0, -0.36, 0, 0.72, 0, 0.36, 0, 0.72, 0, 0, 0)
+transform = Transform3D(0.072, 0, -0.036, 0, 0.072, 0, 0.036, 0, 0.072, 0, 0, 0)
 mesh = ExtResource("14_gallo")
 
 [node name="Pollito" type="CharacterBody3D" parent="Animales"]
@@ -471,11 +485,15 @@ shape = SubResource("Shape_animal_pollito")
 [node name="Esqueleto" type="Node3D" parent="Animales/Pollito"]
 
 [node name="Modelo" type="MeshInstance3D" parent="Animales/Pollito/Esqueleto"]
-transform = Transform3D(0.34, 0, 0, 0, 0.34, 0, 0, 0, 0.34, 0, 0, 0)
+transform = Transform3D(0.034, 0, 0, 0, 0.034, 0, 0, 0, 0.034, 0, 0, 0)
 mesh = ExtResource("27_poll")
 
 [node name="Granja" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -120)
+
+[node name="CropGrid" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, 84)
+script = ExtResource("28_cult")
 
 [node name="Granero" type="MeshInstance3D" parent="Granja"]
 transform = Transform3D(0.165, 0, 0, 0, 0.165, 0, 0, 0, 0.165, 0, -0.165, 0)
@@ -544,6 +562,42 @@ transform = Transform3D(0, 0, -0.15, 0, 0.15, 0, 0.15, 0, 0, 11.5, 0, 2.4)
 mesh = ExtResource("16_cerca")
 script = ExtResource("17_coltri")
 
+[node name="LuzInteriorPrincipal" type="OmniLight3D" parent="Granja"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0.2)
+light_color = Color(1, 0.84, 0.5, 1)
+light_energy = 2.5
+omni_range = 8.0
+
+[node name="LuzCocina" type="OmniLight3D" parent="Granja"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 2.8, -1.8)
+light_color = Color(1, 0.62, 0.25, 1)
+light_energy = 1.8
+omni_range = 5.0
+
+[node name="LuzPorche" type="SpotLight3D" parent="Granja"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2.8, 3.55)
+light_color = Color(1, 0.894118, 0.627451, 1)
+light_energy = 1.5
+spot_range = 6.0
+spot_angle = 45.0
+
+[node name="Radio" type="Node3D" parent="Granja"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.0, 3.1)
+
+[node name="RadioMesh" type="MeshInstance3D" parent="Granja/Radio"]
+transform = Transform3D(0.05, 0, 0, 0, 0.05, 0, 0, 0, 0.05, 0, 0, 0)
+rotation_degrees = Vector3(0, 180, 0)
+mesh = ExtResource("31_radio_mesh")
+
+[node name="Area3D" type="Area3D" parent="Granja/Radio"]
+script = ExtResource("30_radio")
+music_stream = ExtResource("25_music")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Granja/Radio/Area3D"]
+shape = SubResource("Shape_animal_pequeno")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Granja/Radio/Area3D"]
+
 [node name="Atmosfera" type="Node3D" parent="."]
 
 [node name="MusicaAmbiente" type="AudioStreamPlayer" parent="Atmosfera"]
@@ -591,3 +645,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 120)
 
 [node name="Jugador" parent="." instance=ExtResource("1_jug")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 120)
+
+[node name="GameUI" parent="." instance=ExtResource("29_ui")]

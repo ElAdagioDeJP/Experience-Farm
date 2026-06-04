@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bbfrscogt6kd0"
+path="res://.godot/imported/Sonido de  vaca.mp3-f6df8a0c8460517f195c7905fa1cf7d1.mp3str"
+
+[deps]
+
+source_file="res://music/animales/vaca/Sonido de  vaca.mp3"
+dest_files=["res://.godot/imported/Sonido de  vaca.mp3-f6df8a0c8460517f195c7905fa1cf7d1.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

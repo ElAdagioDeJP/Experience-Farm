@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://df3tr38vg5xyc"
+path="res://.godot/imported/CABALLO VIEJO - SIMON DIAZ.mp3-eca447d5a91e006109bb9ddc8033cc05.mp3str"
+
+[deps]
+
+source_file="res://music/radio/CABALLO VIEJO - SIMON DIAZ.mp3"
+dest_files=["res://.godot/imported/CABALLO VIEJO - SIMON DIAZ.mp3-eca447d5a91e006109bb9ddc8033cc05.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

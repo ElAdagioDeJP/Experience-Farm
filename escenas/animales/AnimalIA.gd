@@ -28,6 +28,10 @@ enum TipoAnimal {
 @export var usar_offset_yaw_manual: bool = false
 @export var yaw_modelo_grados: float = 0.0
 @export_range(0, 3, 1) var variante: int = 0
+@export var distancia_activacion_sonido: float = 18.0
+@export var intervalo_sonido_seg: float = 20.0
+@export_range(0.0, 1.0, 0.01) var probabilidad_sonido: float = 0.05
+@export var volumen_sonido_db: float = -11.0
 
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _origen: Vector3 = Vector3.ZERO
@@ -56,6 +60,8 @@ var _base_cola_rot: Vector3 = Vector3.ZERO
 var _yaw_modelo_offset: float = 0.0
 var _transform_modelo_base: Transform3D = Transform3D.IDENTITY
 var _tamano_malla_base: Vector3 = Vector3.ONE
+var _audio_animal: AudioStreamPlayer3D
+var _tiempo_en_rango_sonido: float = 0.0
 
 
 func _ready() -> void:
@@ -65,6 +71,7 @@ func _ready() -> void:
 	_jugador = get_tree().get_first_node_in_group("jugador") as Node3D
 	_fase_anim = _rng.randf_range(0.0, TAU)
 	_preparar_esqueleto()
+	_configurar_audio_animal()
 	_seleccionar_objetivo_aleatorio()
 	_espera_restante = _rng.randf_range(espera_min, espera_max)
 
@@ -81,7 +88,87 @@ func _physics_process(delta: float) -> void:
 	_actualizar_objetivo_por_jugador()
 	_actualizar_movimiento(delta)
 	_animar_esqueleto(delta)
+	_actualizar_sonido_animal(delta)
 	move_and_slide()
+
+
+func _configurar_audio_animal() -> void:
+	_audio_animal = AudioStreamPlayer3D.new()
+	_audio_animal.name = "AudioAnimal"
+	_audio_animal.max_distance = maxf(distancia_activacion_sonido + 8.0, 10.0)
+	_audio_animal.unit_size = 2.2
+	_audio_animal.volume_db = volumen_sonido_db
+	_audio_animal.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	_audio_animal.doppler_tracking = AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED
+	add_child(_audio_animal)
+	_audio_animal.owner = owner
+
+
+func _actualizar_sonido_animal(delta: float) -> void:
+	if _jugador == null or _audio_animal == null:
+		return
+
+	var dist: float = global_position.distance_to(_jugador.global_position)
+	if dist > distancia_activacion_sonido:
+		_tiempo_en_rango_sonido = 0.0
+		return
+
+	_tiempo_en_rango_sonido += delta
+	if _tiempo_en_rango_sonido < intervalo_sonido_seg:
+		return
+
+	_tiempo_en_rango_sonido = 0.0
+	if _rng.randf() > probabilidad_sonido:
+		return
+
+	var stream: AudioStream = _obtener_stream_sonido_animal()
+	if stream == null:
+		return
+
+	_audio_animal.stream = stream
+	_audio_animal.play()
+
+
+func _obtener_stream_sonido_animal() -> AudioStream:
+	var rutas: PackedStringArray = _rutas_sonido_por_tipo()
+	if rutas.is_empty():
+		return null
+
+	var disponibles: Array[AudioStream] = []
+	for ruta in rutas:
+		if ResourceLoader.exists(ruta):
+			var audio: AudioStream = load(ruta) as AudioStream
+			if audio != null:
+				disponibles.append(audio)
+
+	if disponibles.is_empty():
+		return null
+
+	var idx: int = _rng.randi_range(0, disponibles.size() - 1)
+	return disponibles[idx]
+
+
+func _rutas_sonido_por_tipo() -> PackedStringArray:
+	match tipo_animal:
+		TipoAnimal.VACA:
+			return PackedStringArray(["res://music/animales/vaca/Sonido de  vaca.mp3"])
+		TipoAnimal.TORO:
+			return PackedStringArray(["res://music/animales/toro/Impresionante! TORO BRAVO DE LIDIA BRAMANDO.mp3"])
+		TipoAnimal.CABALLO:
+			return PackedStringArray(["res://music/animales/caballo/CAVALO RELINCHANDO.mp3"])
+		TipoAnimal.CERDO:
+			return PackedStringArray(["res://music/animales/cerdo/Sonido Del Cerdito.mp3"])
+		TipoAnimal.GALLINA:
+			return PackedStringArray(["res://music/animales/gallina/Sonido de gallina.mp3"])
+		TipoAnimal.GALLO:
+			return PackedStringArray(["res://music/animales/gallina/Sonido de gallina.mp3"])
+		TipoAnimal.POLLITO:
+			return PackedStringArray([
+				"res://music/animales/pollito/Baby Chick Chirping Sound To Attract Hen.mp3",
+				"res://music/animales/pollito/alex_jauk-baby-chicks-chirping-192422.mp3",
+				"res://music/animales/pollito/ajangrahmat-chick-sound-effect-free-royalty-free-204226.mp3"
+			])
+	return PackedStringArray()
 
 
 func _actualizar_objetivo_por_jugador() -> void:
@@ -363,5 +450,8 @@ func _ruta_malla_variante() -> String:
 		TipoAnimal.GALLO:
 			return "res://assets/models/variantes/gallo_v%d.obj" % idx
 		TipoAnimal.POLLITO:
+			var ruta_nueva := "res://assets/models/pollito_v%d.obj" % idx
+			if ResourceLoader.exists(ruta_nueva):
+				return ruta_nueva
 			return "res://assets/models/variantes/pollito_v%d.obj" % idx
 	return ""

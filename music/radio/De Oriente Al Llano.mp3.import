@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://nyu3hcsdsnhi"
+path="res://.godot/imported/De Oriente Al Llano.mp3-16aebce1cbde0068a921f7f78b9f6a49.mp3str"
+
+[deps]
+
+source_file="res://music/radio/De Oriente Al Llano.mp3"
+dest_files=["res://.godot/imported/De Oriente Al Llano.mp3-16aebce1cbde0068a921f7f78b9f6a49.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

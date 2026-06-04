@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bukmdswk2w6id"
+path="res://.godot/imported/Santiago Rojas  - La Viuda Millonaria  Video Lyric.mp3-c7ada264d1f454e8b7290393c09ddcbf.mp3str"
+
+[deps]
+
+source_file="res://music/radio/Santiago Rojas  - La Viuda Millonaria  Video Lyric.mp3"
+dest_files=["res://.godot/imported/Santiago Rojas  - La Viuda Millonaria  Video Lyric.mp3-c7ada264d1f454e8b7290393c09ddcbf.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

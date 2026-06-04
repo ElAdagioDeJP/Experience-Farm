@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dm12t0g4ra3o2"
+path="res://.godot/imported/aguacate_v3.obj-c87c05dec348ba787616c35f11c7c659.mesh"
+
+[deps]
+
+files=["res://.godot/imported/aguacate_v3.obj-c87c05dec348ba787616c35f11c7c659.mesh"]
+
+source_file="res://assets/models/aguacate_v3.obj"
+dest_files=["res://.godot/imported/aguacate_v3.obj-c87c05dec348ba787616c35f11c7c659.mesh", "res://.godot/imported/aguacate_v3.obj-c87c05dec348ba787616c35f11c7c659.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://i0u84g418e6e"
+path="res://.godot/imported/cerco_cultivo.obj-c218e2e851318631bd9068b0379bd939.mesh"
+
+[deps]
+
+files=["res://.godot/imported/cerco_cultivo.obj-c218e2e851318631bd9068b0379bd939.mesh"]
+
+source_file="res://assets/models/cerco_cultivo.obj"
+dest_files=["res://.godot/imported/cerco_cultivo.obj-c218e2e851318631bd9068b0379bd939.mesh", "res://.godot/imported/cerco_cultivo.obj-c218e2e851318631bd9068b0379bd939.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

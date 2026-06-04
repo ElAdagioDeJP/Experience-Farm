@@ -157,44 +157,57 @@ def variantes_desde_base(nombre: str, size: tuple[int, int, int], voxels: list[t
 
 def generar_pollito_vox(v: int) -> tuple[tuple[int, int, int], list[tuple[int, int, int, int]]]:
     size = (16, 16, 16)
-    vox = []
+    vox: list[tuple[int, int, int, int]] = []
 
-    body, light, beak = {
-        1: (38, 37, 37),
-        2: (38, 33, 37),
-        3: (37, 38, 33),
-        4: (17, 38, 37),
+    # Variantes con silueta tipo "baby chicken" y cambios de paleta.
+    # idx relevantes: 26 blanco, 25 ojo, 22 pico rosado, 37 amarillo, 23/24 patas.
+    body_base, body_light, body_shadow, beak = {
+        1: (26, 26, 21, 22),
+        2: (38, 33, 17, 37),
+        3: (31, 26, 19, 22),
+        4: (21, 26, 24, 22),
     }[v]
 
-    # Cuerpo
-    for x in range(6, 11):
-        for y in range(4, 8):
-            for z in range(6, 11):
-                c = light if (x + y + z) % 5 == 0 else body
-                vox.append((x, z, y, c))
+    def agregar_caja(x0: int, x1: int, y0: int, y1: int, z0: int, z1: int, color: int) -> None:
+        for x in range(x0, x1 + 1):
+            for y in range(y0, y1 + 1):
+                for z in range(z0, z1 + 1):
+                    vox.append((x, y, z, color))
 
-    # Cabeza
-    for x in range(6, 11):
-        for y in range(8, 12):
-            for z in range(4, 8):
-                c = light if (x + z) % 4 == 0 else body
-                vox.append((x, z, y, c))
+    # Cabeza grande (cubo principal).
+    agregar_caja(4, 11, 4, 11, 6, 13, body_base)
 
-    # Pico
-    for x in range(7, 10):
-        for y in range(9, 11):
-            vox.append((x, 2, y, beak))
+    # Cuerpo compacto debajo de la cabeza.
+    agregar_caja(5, 10, 5, 10, 3, 6, body_base)
 
-    # Patitas
-    for y in range(1, 4):
-        vox.append((7, 11, y, 37))
-        vox.append((9, 11, y, 37))
+    # Alas laterales sencillas.
+    agregar_caja(3, 3, 6, 9, 6, 9, body_shadow)
+    agregar_caja(12, 12, 6, 9, 6, 9, body_shadow)
 
-    # Ojos
-    vox.append((7, 4, 10, 25))
-    vox.append((9, 4, 10, 25))
+    # Pico frontal 2x2x2.
+    agregar_caja(7, 8, 2, 3, 8, 9, beak)
 
-    return size, vox
+    # Patas y pies.
+    agregar_caja(6, 6, 7, 7, 0, 2, 23)
+    agregar_caja(9, 9, 7, 7, 0, 2, 23)
+    agregar_caja(5, 6, 7, 8, 0, 0, 24)
+    agregar_caja(9, 10, 7, 8, 0, 0, 24)
+
+    # Ojos.
+    vox.append((5, 4, 10, 25))
+    vox.append((10, 4, 10, 25))
+
+    # Luces/sombras suaves para evitar bloque plano.
+    detalle: list[tuple[int, int, int, int]] = []
+    for x, y, z, c in vox:
+        if c != body_base:
+            continue
+        if z >= 11 and (x + y) % 3 == 0:
+            detalle.append((x, y, z, body_light))
+        elif (x in (4, 11) or y in (4, 11) or z <= 4) and (x + y + z) % 2 == 0:
+            detalle.append((x, y, z, body_shadow))
+
+    return size, add_or_set(vox, detalle)
 
 
 def main() -> None:
@@ -219,6 +232,7 @@ def main() -> None:
         str(ROOT / "tools" / "vox_to_obj.py"),
         str(VOX_OUT),
         str(OBJ_OUT),
+        "0.1",
     ])
 
     print(f"Variantes VOX generadas en: {VOX_OUT}")

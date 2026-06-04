@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://du5ekknap32s7"
+path="res://.godot/imported/caraota_v3.obj-f71ed65f3cbf8efb0bba3e219cbbfbef.mesh"
+
+[deps]
+
+files=["res://.godot/imported/caraota_v3.obj-f71ed65f3cbf8efb0bba3e219cbbfbef.mesh"]
+
+source_file="res://assets/models/caraota_v3.obj"
+dest_files=["res://.godot/imported/caraota_v3.obj-f71ed65f3cbf8efb0bba3e219cbbfbef.mesh", "res://.godot/imported/caraota_v3.obj-f71ed65f3cbf8efb0bba3e219cbbfbef.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

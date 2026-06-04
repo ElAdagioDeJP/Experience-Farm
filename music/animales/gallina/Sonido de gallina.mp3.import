@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://vci4jiypne0j"
+path="res://.godot/imported/Sonido de gallina.mp3-44270ea3287d27512b534f623eae5f0f.mp3str"
+
+[deps]
+
+source_file="res://music/animales/gallina/Sonido de gallina.mp3"
+dest_files=["res://.godot/imported/Sonido de gallina.mp3-44270ea3287d27512b534f623eae5f0f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

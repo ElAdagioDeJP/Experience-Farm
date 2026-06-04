@@ -1,0 +1,28 @@
+newmtl c6
+Kd 0.7529 0.8471 0.3529
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c8
+Kd 0.2902 0.4392 0.1255
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c9
+Kd 0.6588 0.7843 0.2275
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
+newmtl c10
+Kd 0.9412 0.5961 0.5961
+Ka 0 0 0
+Ks 0 0 0
+illum 1
+d 1
+
