@@ -29,9 +29,9 @@ enum TipoAnimal {
 @export var yaw_modelo_grados: float = 0.0
 @export_range(0, 3, 1) var variante: int = 0
 @export var distancia_activacion_sonido: float = 18.0
-@export var intervalo_sonido_seg: float = 20.0
-@export_range(0.0, 1.0, 0.01) var probabilidad_sonido: float = 0.05
-@export var volumen_sonido_db: float = -11.0
+@export var intervalo_sonido_seg: float = 7.0
+@export_range(0.0, 1.0, 0.01) var probabilidad_sonido: float = 1.0
+@export var volumen_sonido_db: float = -7.0
 
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _origen: Vector3 = Vector3.ZERO
@@ -62,6 +62,8 @@ var _transform_modelo_base: Transform3D = Transform3D.IDENTITY
 var _tamano_malla_base: Vector3 = Vector3.ONE
 var _audio_animal: AudioStreamPlayer3D
 var _tiempo_en_rango_sonido: float = 0.0
+var _jugador_en_rango_sonido: bool = false
+var _streams_sonido: Array = []
 
 
 func _ready() -> void:
@@ -72,12 +74,15 @@ func _ready() -> void:
 	_fase_anim = _rng.randf_range(0.0, TAU)
 	_preparar_esqueleto()
 	_configurar_audio_animal()
+	_precargar_sonidos_animal()
 	_seleccionar_objetivo_aleatorio()
 	_espera_restante = _rng.randf_range(espera_min, espera_max)
 
 
 func _physics_process(delta: float) -> void:
-	if _jugador == null or not is_instance_valid(_jugador):
+	if _jugador == null:
+		_jugador = get_tree().get_first_node_in_group("jugador") as Node3D
+	elif not is_instance_valid(_jugador):
 		_jugador = get_tree().get_first_node_in_group("jugador") as Node3D
 
 	if not is_on_floor():
@@ -110,8 +115,13 @@ func _actualizar_sonido_animal(delta: float) -> void:
 
 	var dist: float = global_position.distance_to(_jugador.global_position)
 	if dist > distancia_activacion_sonido:
+		_jugador_en_rango_sonido = false
 		_tiempo_en_rango_sonido = 0.0
 		return
+
+	if not _jugador_en_rango_sonido:
+		_jugador_en_rango_sonido = true
+		_tiempo_en_rango_sonido = intervalo_sonido_seg
 
 	_tiempo_en_rango_sonido += delta
 	if _tiempo_en_rango_sonido < intervalo_sonido_seg:
@@ -130,22 +140,26 @@ func _actualizar_sonido_animal(delta: float) -> void:
 
 
 func _obtener_stream_sonido_animal() -> AudioStream:
+	if _streams_sonido.is_empty():
+		return null
+
+	var idx: int = _rng.randi_range(0, _streams_sonido.size() - 1)
+	return _streams_sonido[idx]
+
+
+func _precargar_sonidos_animal() -> void:
+	_streams_sonido.clear()
 	var rutas: PackedStringArray = _rutas_sonido_por_tipo()
-	if rutas.is_empty():
-		return null
-
-	var disponibles: Array[AudioStream] = []
 	for ruta in rutas:
-		if ResourceLoader.exists(ruta):
-			var audio: AudioStream = load(ruta) as AudioStream
-			if audio != null:
-				disponibles.append(audio)
+		if not ResourceLoader.exists(ruta):
+			continue
+		var audio: AudioStream = load(ruta) as AudioStream
+		if audio != null:
+			_streams_sonido.append(audio)
 
-	if disponibles.is_empty():
-		return null
-
-	var idx: int = _rng.randi_range(0, disponibles.size() - 1)
-	return disponibles[idx]
+	if _streams_sonido.is_empty():
+		if not rutas.is_empty():
+			push_warning("No se pudieron cargar sonidos para %s" % name)
 
 
 func _rutas_sonido_por_tipo() -> PackedStringArray:
